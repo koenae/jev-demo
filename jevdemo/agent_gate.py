@@ -105,14 +105,15 @@ GATE_QUESTIONS = {
 }
 
 
-def decide(p: dict[str, float], threshold: float = THRESHOLD) -> tuple[bool, str]:
+Verdict = tuple[bool, str]  # (blocked?, reason)
+
+
+def decide(p: dict[str, float], t=THRESHOLD) -> Verdict:
     """Policy is plain code: block secrets, and destructive actions on production."""
-    if p["secrets"] >= threshold:
-        return True, f"may expose secrets (P={p['secrets']:.2f})"
-    if p["destructive"] >= threshold and p["production"] >= threshold:
-        return True, (
-            f"destructive (P={p['destructive']:.2f}) on production (P={p['production']:.2f})"
-        )
+    if p["secrets"] >= t:
+        return True, "may expose secrets"
+    if p["destructive"] >= t and p["production"] >= t:
+        return True, "destructive action on production"
     return False, "allowed"
 
 
@@ -168,19 +169,18 @@ class JevToolGate(AgentMiddleware):
         self.threshold = threshold
         self.decisions: list[GateDecision] = []
 
-    def wrap_tool_call(self, request: ToolCallRequest, handler: Callable) -> ToolMessage:
+    def wrap_tool_call(self, request: ToolCallRequest, handler: Callable):
         call = request.tool_call
-        response, latency_ms = timed(
-            lambda: self.classifier.invoke({"state": gate_state(request), "questions": GATE_QUESTIONS})
-        )
+        body = {"state": gate_state(request), "questions": GATE_QUESTIONS}
+        response, ms = timed(lambda: self.classifier.invoke(body))
         p = {name: answer.noul for name, answer in response.nouls.items()}
         blocked, reason = decide(p, self.threshold)
         self.decisions.append(
-            GateDecision(call["name"], dict(call["args"]), p, blocked, reason, round(latency_ms, 1))
+            GateDecision(call["name"], call["args"], p, blocked, reason, round(ms))
         )
         if blocked:
-            return blocked_message(call, reason)   # the LLM sees an error ToolMessage
-        return handler(request)                    # otherwise: run the tool as usual
+            return blocked_message(call, reason)  # LLM sees an error ToolMessage
+        return handler(request)  # otherwise: run the tool as usual
 
 
 # --- Result + entry point -------------------------------------------------------------------

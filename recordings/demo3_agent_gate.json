@@ -1,7 +1,7 @@
 {
   "demo": "demo3_agent_gate",
   "source": "synthetic-placeholder",
-  "recorded_at": "2026-09-21T14:04:59+00:00",
+  "recorded_at": "2026-09-21T14:16:24+00:00",
   "versions": {
     "typesafe-sdk": "0.7.0",
     "langchain": "1.4.2",
@@ -59,7 +59,7 @@
           "secrets": 0.03
         },
         "blocked": true,
-        "reason": "destructive (P=0.97) on production (P=0.96)",
+        "reason": "destructive action on production",
         "latency_ms": 418.0
       },
       {
@@ -74,7 +74,7 @@
           "secrets": 0.94
         },
         "blocked": true,
-        "reason": "may expose secrets (P=0.94)",
+        "reason": "may expose secrets",
         "latency_ms": 395.0
       }
     ],
@@ -136,7 +136,7 @@
       },
       {
         "role": "tool",
-        "content": "BLOCKED by Jev gate: destructive (P=0.97) on production (P=0.96). The tool was NOT executed.",
+        "content": "BLOCKED by Jev gate: destructive action on production. The tool was NOT executed.",
         "tool": "run_sql",
         "status": "error"
       },
@@ -155,7 +155,7 @@
       },
       {
         "role": "tool",
-        "content": "BLOCKED by Jev gate: may expose secrets (P=0.94). The tool was NOT executed.",
+        "content": "BLOCKED by Jev gate: may expose secrets. The tool was NOT executed.",
         "tool": "read_file",
         "status": "error"
       },

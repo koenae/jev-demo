@@ -1,0 +1,71 @@
+{
+  "type": "slides",
+  "data": {
+    "cells": [
+      {
+        "type": "skip"
+      },
+      {
+        "type": "skip"
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Schakelaar: LIVE aan = echte API-calls; uit = recordings/. Knop 'opnieuw' herhaalt de demo's."
+      },
+      {
+        "type": "skip"
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Iedereen heeft dit geschreven. Het probleem is niet het LLM, het is dat tekst geen type is."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Kahneman: snel/intuïtief vs traag/bewust. Jev is System 1 voor je code."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Geen tekst, wel kansen. Meerdere vragen per call, parallel beantwoord."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Dit is de echte code uit demo 1. Choice/Score hebben confidence; Noul is zelf een kans."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Live: één call, drie antwoorden. Wijs op de verdeling en de latency."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Elf tickets, een paar bewust ambigu. Dan de slider: geen nieuwe API-calls."
+      },
+      {
+        "type": "fragment"
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Routing, gates, compaction, evals. Code houdt de controle."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Het hoogtepunt: DROP TABLE op productie en het secrets-bestand worden geblokkeerd."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Vendor-claims naast eigen metingen. Rode badge = placeholder, nog niet gemeten."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Early access, alpha-packages, geen reasoning, calibratie is geen correctheid."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Laat het LLM praten en plannen, laat System 1 kiezen. Repo-link."
+      }
+    ],
+    "deck": {
+      "transition": "none",
+      "verticalAlign": "top"
+    }
+  }
+}

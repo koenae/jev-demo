@@ -5,8 +5,9 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from typesafe_sdk import Choice, Noul, NoulCriteria, Score, TypeSafeClient
+from typesafe_sdk import Choice, Noul, Score, TypeSafeClient
 
+from jevdemo.questions import REFUND, TEAMS, URGENCY_LEVELS
 from jevdemo.jev import (
     CallMeta,
     ChoiceView,
@@ -32,27 +33,15 @@ TICKET = (
 QUESTIONS = {
     "team": Choice(
         instructions="Which team should own this ticket?",
-        criteria={
-            "billing": "Invoices, charges, refunds, subscriptions.",
-            "technical": "Bugs, errors, integrations, outages.",
-            "sales": "Plans, pricing, upgrades before purchase.",
-            "other": "Anything else.",
-        },
+        criteria=TEAMS,               # label -> description (or None)
     ),
     "urgency": Score(
         instructions="How urgent is this ticket for the customer?",
-        criteria=[
-            "No time pressure; can wait a week.",
-            "Should be handled within a few days.",
-            "Blocking the customer; needs a same-day response.",
-        ],
+        criteria=URGENCY_LEVELS,      # ordered rubric: index = score
     ),
     "refund": Noul(
         instructions="Does the customer ask for money back?",
-        criteria=NoulCriteria(
-            true="The customer explicitly wants a charge reversed, refunded or credited.",
-            false="The customer only reports a problem or asks a question.",
-        ),
+        criteria=REFUND,              # optional: describe yes / no
     ),
 }
 
@@ -95,9 +84,9 @@ def smart_if(client: TypeSafeClient, ticket: str) -> SmartIfResult:
     response, latency_ms = timed_system_one(
         client, state={"ticket": ticket}, questions=QUESTIONS
     )
-    team = response.choices["team"]        # .choice, .confidence, .probabilities
-    urgency = response.scores["urgency"]   # .score (weighted), .probabilities per level
-    refund = response.nouls["refund"]      # .noul = P(yes)
+    team = response.choices["team"]       # .choice, .confidence, .probabilities
+    urgency = response.scores["urgency"]  # .score, .probabilities per level
+    refund = response.nouls["refund"]     # .noul = P(yes)
     return SmartIfResult(
         ticket=ticket,
         team=view(team),

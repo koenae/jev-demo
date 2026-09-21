@@ -7,6 +7,7 @@ from typing import Any
 
 from typesafe_sdk import Choice, Score, TypeSafeClient
 
+from jevdemo.questions import TEAMS, URGENCY_LEVELS
 from jevdemo.jev import (
     CallMeta,
     ChoiceView,
@@ -58,23 +59,8 @@ TICKETS: list[Ticket] = [
 ]
 
 QUESTIONS = {
-    "team": Choice(
-        instructions="Which team should own this ticket?",
-        criteria={
-            "billing": "Invoices, charges, refunds, subscriptions.",
-            "technical": "Bugs, errors, integrations, outages, account access.",
-            "sales": "Plans, pricing, upgrades, discounts.",
-            "other": "No action needed or not a support request.",
-        },
-    ),
-    "urgency": Score(
-        instructions="How urgent is this ticket for the customer?",
-        criteria=[
-            "No time pressure; can wait a week.",
-            "Should be handled within a few days.",
-            "Blocking the customer; needs a same-day response.",
-        ],
-    ),
+    "team": Choice(instructions="Which team should own this ticket?", criteria=TEAMS),
+    "urgency": Score(instructions="How urgent is this ticket?", criteria=URGENCY_LEVELS),
 }
 
 
