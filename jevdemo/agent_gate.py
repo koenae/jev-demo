@@ -25,6 +25,7 @@ from langchain_typesafe.client import TypeSafeAPIConnectionError, TypeSafeAPIErr
 
 from jevdemo.config import build_chat_model, llm_settings, typesafe_api_key
 from jevdemo.errors import DemoError
+from jevdemo.latency import timed
 from jevdemo.recording import Mode, load_recording, origin_of, save_recording
 
 # TypeSafeClassifier is marked beta (0.0.1a3); keep the warning off the projector.
@@ -139,6 +140,25 @@ class GateDecision:
         return cls(d["tool"], d["args"], d["probabilities"], d["blocked"], d["reason"], d["latency_ms"])
 
 
+def gate_state(request: ToolCallRequest) -> dict[str, Any]:
+    """What Jev gets to see: the proposed call, the tool's docstring, recent messages."""
+    call = request.tool_call
+    return {
+        "tool_call": {"name": call["name"], "args": call["args"]},
+        "tool_description": request.tool.description if request.tool else "",
+        "recent_messages": request.state["messages"][-10:],
+    }
+
+
+def blocked_message(call: dict[str, Any], reason: str) -> ToolMessage:
+    return ToolMessage(
+        content=f"BLOCKED by Jev gate: {reason}. The tool was NOT executed.",
+        tool_call_id=call["id"],
+        name=call["name"],
+        status="error",
+    )
+
+
 class JevToolGate(AgentMiddleware):
     """Ask Jev three Noul questions before every tool call; block based on the policy."""
 
@@ -150,27 +170,17 @@ class JevToolGate(AgentMiddleware):
 
     def wrap_tool_call(self, request: ToolCallRequest, handler: Callable) -> ToolMessage:
         call = request.tool_call
-        state = {
-            "tool_call": {"name": call["name"], "args": call["args"]},
-            "tool_description": request.tool.description if request.tool else "",
-            "recent_messages": request.state["messages"][-10:],
-        }
-        started = perf_counter()
-        response = self.classifier.invoke({"state": state, "questions": GATE_QUESTIONS})
-        latency_ms = (perf_counter() - started) * 1000
+        response, latency_ms = timed(
+            lambda: self.classifier.invoke({"state": gate_state(request), "questions": GATE_QUESTIONS})
+        )
         p = {name: answer.noul for name, answer in response.nouls.items()}
         blocked, reason = decide(p, self.threshold)
         self.decisions.append(
             GateDecision(call["name"], dict(call["args"]), p, blocked, reason, round(latency_ms, 1))
         )
         if blocked:
-            return ToolMessage(
-                content=f"BLOCKED by Jev gate: {reason}. The tool was NOT executed.",
-                tool_call_id=call["id"],
-                name=call["name"],
-                status="error",
-            )
-        return handler(request)
+            return blocked_message(call, reason)   # the LLM sees an error ToolMessage
+        return handler(request)                    # otherwise: run the tool as usual
 
 
 # --- Result + entry point -------------------------------------------------------------------

@@ -1,0 +1,80 @@
+{
+  "demo": "latency_benchmark",
+  "source": "synthetic-placeholder",
+  "recorded_at": "2026-09-21T14:04:59+00:00",
+  "versions": {
+    "typesafe-sdk": "0.7.0",
+    "langchain": "1.4.2",
+    "langchain-core": "1.6.3",
+    "langchain-typesafe": "0.0.1a3",
+    "langchain-openai": "1.6.2",
+    "langchain-anthropic": "1.7.2",
+    "langgraph": "1.2.11",
+    "marimo": "0.24.2",
+    "rich": "15.0.0",
+    "python-dotenv": "1.2.3"
+  },
+  "data": {
+    "location": "PLACEHOLDER - not measured. Run scripts/benchmark.py from Belgium.",
+    "calls_per_demo": 10,
+    "results": {
+      "demo1_smart_if": {
+        "samples_ms": [
+          412,
+          398,
+          445,
+          380,
+          402,
+          521,
+          391,
+          410,
+          388,
+          405
+        ],
+        "n": 10,
+        "median_ms": 403.5,
+        "p95_ms": 486.8,
+        "min_ms": 380,
+        "max_ms": 521
+      },
+      "demo2_confidence_gate": {
+        "samples_ms": [
+          388,
+          401,
+          372,
+          395,
+          431,
+          379,
+          366,
+          351,
+          447,
+          402
+        ],
+        "n": 10,
+        "median_ms": 391.5,
+        "p95_ms": 439.8,
+        "min_ms": 351,
+        "max_ms": 447
+      },
+      "demo3_agent_gate": {
+        "samples_ms": [
+          402,
+          437,
+          418,
+          395,
+          460,
+          410,
+          399,
+          428,
+          405,
+          512
+        ],
+        "n": 10,
+        "median_ms": 414.0,
+        "p95_ms": 488.6,
+        "min_ms": 395,
+        "max_ms": 512
+      }
+    }
+  }
+}

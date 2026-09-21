@@ -26,7 +26,7 @@ def main(mode: str, threshold: float) -> None:
 
     table = Table(title=f"Per ticket (threshold {threshold:.2f})", show_lines=False)
     table.add_column("ID", style="bold")
-    table.add_column("Ticket", max_width=48)
+    table.add_column("Ticket", max_width=48, no_wrap=True, overflow="ellipsis")
     table.add_column("Team")
     table.add_column("Conf.", justify="right")
     table.add_column("")

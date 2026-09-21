@@ -31,7 +31,7 @@ def main(mode: str) -> None:
     table.add_column("ms", justify="right")
     table.add_column("Decision")
     for i, d in enumerate(result.decisions, 1):
-        args = ", ".join(f"{k}={v!r}" for k, v in d.args.items())
+        args = ", ".join(f"{k}={str(v)[:38] + ('…' if len(str(v)) > 38 else '')!r}" for k, v in d.args.items())
         p = d.probabilities
         verdict = f"[red bold]BLOCKED[/red bold]\n{d.reason}" if d.blocked else "[green]allowed[/green]"
         table.add_row(
