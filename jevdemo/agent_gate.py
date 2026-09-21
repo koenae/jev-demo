@@ -240,6 +240,22 @@ def _text(message: BaseMessage) -> str:
     )
 
 
+def in_call_order(decisions: list[GateDecision], messages: list[BaseMessage]) -> list[GateDecision]:
+    """LangGraph runs tool calls in parallel, so re-sort decisions by the LLM's call order."""
+    order = [
+        (c["name"], dict(c["args"]))
+        for m in messages
+        if isinstance(m, AIMessage)
+        for c in m.tool_calls
+    ]
+
+    def rank(d: GateDecision) -> int:
+        key = (d.tool, dict(d.args))
+        return order.index(key) if key in order else len(order)
+
+    return sorted(decisions, key=rank)
+
+
 def _transcript(messages: list[BaseMessage]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for m in messages:
@@ -286,7 +302,7 @@ def run_agent_gate(mode: Mode = "live", task: str = TASK) -> AgentGateResult:
     messages: list[BaseMessage] = state["messages"]
     result = AgentGateResult(
         task=task,
-        decisions=gate.decisions,
+        decisions=in_call_order(gate.decisions, messages),
         transcript=_transcript(messages),
         final_answer=_text(messages[-1]),
         llm=settings.label,

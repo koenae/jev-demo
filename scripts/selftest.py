@@ -78,17 +78,19 @@ def main() -> int:
             )
             state = agent_gate.build_agent(gate, llm).invoke({"messages": [HumanMessage("go")]})
             assert len(gate.decisions) == 3, gate.decisions
-            tool_msgs = [m for m in state["messages"] if m.type == "tool"]
+            tool_msgs = {m.name: m for m in state["messages"] if m.type == "tool"}
             assert len(tool_msgs) == 3
-            for d, m in zip(gate.decisions, tool_msgs):
-                assert d.blocked == (m.status == "error"), (d, m)
+            for d in gate.decisions:  # tool calls run in parallel: match by name, not order
+                assert d.blocked == (tool_msgs[d.tool].status == "error"), (d, tool_msgs[d.tool])
+            ordered = agent_gate.in_call_order(gate.decisions, state["messages"])
+            assert [d.tool for d in ordered] == ["run_shell", "run_sql", "read_file"], ordered
             result = agent_gate.AgentGateResult(
-                task="go", decisions=gate.decisions, transcript=agent_gate._transcript(state["messages"]),
+                task="go", decisions=ordered, transcript=agent_gate._transcript(state["messages"]),
                 final_answer=agent_gate._text(state["messages"][-1]), llm="fake", total_ms=1.0,
             )
             recording.save_recording(agent_gate.RECORDING, result.to_dict())
             replay = agent_gate.run_agent_gate("offline")
-            assert replay.decisions == gate.decisions and replay.final_answer == "Report: done."
+            assert replay.decisions == ordered and replay.final_answer == "Report: done."
             print(f"demo3 ok  middleware ran, blocked={len(replay.blocked)}/3 (random fake probabilities)")
     print("selftest passed")
     return 0
