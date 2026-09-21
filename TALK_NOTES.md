@@ -101,6 +101,7 @@ Californië is doorgaans ~140–160 ms (meet het zelf met `ping`/`curl -w` naar
 - Middleware-`wrap_tool_call` moet een `ToolMessage` (of `Command`) teruggeven; `status="error"` laat het LLM weten dat de call mislukte.
 - Anthropic-modellen geven `content` als lijst van blokken; `_text()` in `agent_gate.py` vangt dat op.
 - Azure: `init_chat_model(deployment, model_provider="azure_openai", azure_deployment=..., azure_endpoint=..., api_version=..., api_key=...)`.
+- Microsoft Foundry (nieuwe `…services.ai.azure.com/openai/v1`-endpoint) is OpenAI-compatibel: `LLM_PROVIDER=openai` + `OPENAI_BASE_URL`; niet het `azure_openai`-pad (dat verwacht een api-version).
 
 **marimo 0.24.2**
 - Slides-layout = `marimo.App(layout_file="layouts/talk.slides.json")` met `{"type":"slides","data":{"cells":[{"type": "slide"|"sub-slide"|"fragment"|"skip", "speakerNotes": "...", "showCode": bool}, ...], "deck": {"transition": ..., "verticalAlign": ...}}}`; één entry per notebook-cel, **op volgorde**. `scripts/make_slides_layout.py` genereert dit uit de celnamen (`setup_*` → skip, `frag_*` → fragment). Formaat afgeleid uit de frontend-source van het package (docs waren onbereikbaar); controleer in `marimo edit` of de layout-dropdown "Slides" hem correct inleest.

@@ -29,6 +29,10 @@ exports/        talk.html en talk.pdf als fallback
    # TYPESAFE_API_KEY=...            (demo 1, 2, 3)
    # LLM_PROVIDER=openai|anthropic|azure_openai, LLM_MODEL=..., + bijhorende key (demo 3)
    ```
+   Alleen demo 3 gebruikt het LLM (de agent die tool calls plant); demo 1 en 2 praten enkel met
+   TypeSafe. Heb je het model via **Microsoft Foundry**? Gebruik dan `LLM_PROVIDER=openai`,
+   `OPENAI_API_KEY=<API Key uit "Call gpt-5-mini in code">` en
+   `OPENAI_BASE_URL=https://<project>.services.ai.azure.com/openai/v1`.
 3. Controleer alles:
    ```bash
    uv run python scripts/preflight.py

@@ -60,6 +60,7 @@ class LLMSettings:
     provider: Provider
     model: str
     api_key: str
+    base_url: str | None = None  # OpenAI-compatible gateways, e.g. Microsoft Foundry /openai/v1
     azure_endpoint: str | None = None
     azure_api_version: str | None = None
 
@@ -79,7 +80,12 @@ def llm_settings() -> LLMSettings:
         )
     model = require_env("LLM_MODEL", "chat model (or Azure deployment name) for the agent")
     if provider == "openai":
-        return LLMSettings("openai", model, require_env("OPENAI_API_KEY", "OpenAI key for demo 3"))
+        return LLMSettings(
+            "openai",
+            model,
+            require_env("OPENAI_API_KEY", "OpenAI (or Foundry) key for demo 3"),
+            base_url=os.environ.get("OPENAI_BASE_URL", "").strip() or None,
+        )
     if provider == "anthropic":
         return LLMSettings(
             "anthropic", model, require_env("ANTHROPIC_API_KEY", "Anthropic key for demo 3")
@@ -107,9 +113,10 @@ def build_chat_model(settings: LLMSettings | None = None):
             api_version=settings.azure_api_version,
             api_key=settings.api_key,
         )
-    return init_chat_model(
-        settings.model, model_provider=settings.provider, api_key=settings.api_key
-    )
+    kwargs = {"api_key": settings.api_key}
+    if settings.base_url:
+        kwargs["base_url"] = settings.base_url
+    return init_chat_model(settings.model, model_provider=settings.provider, **kwargs)
 
 
 @cache
