@@ -137,4 +137,4 @@ Californië is doorgaans ~140–160 ms (meet het zelf met `ping`/`curl -w` naar
 8. **Tickets en prompts zijn in het Engels.** Waarschijnlijk de veiligste keuze voor het model; test één Nederlands ticket voor de talk als je dat wil tonen (staat niet in de demo's).
 9. **PDF-export** in deze omgeving vereiste een symlink naar de voorgeïnstalleerde Chromium-build; op je eigen machine volstaat `uv run playwright install chromium`.
 10. **Slide 10** bevat de RTT-schatting "~140 ms Amsterdam–Californië" als vuistregel; vervang door je eigen `ping`-meting.
-10. Vendor-datums (Jev-lancering 15 sept 2026, langchain-typesafe eerste release 17 sept) komen uit de opdracht; PyPI bevestigt 17 sept voor `langchain-typesafe 0.0.1a1/a2` en 15 sept voor `typesafe-sdk 0.6.0`.
+11. Vendor-datums (Jev-lancering 15 sept 2026, langchain-typesafe eerste release 17 sept) komen uit de opdracht; PyPI bevestigt 17 sept voor `langchain-typesafe 0.0.1a1/a2` en 15 sept voor `typesafe-sdk 0.6.0`.
