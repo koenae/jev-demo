@@ -24,7 +24,15 @@ def setup_imports():
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
 
-    from jevdemo import agent_gate, confidence_gate, head_to_head, questions, smart_if, snippets
+    from jevdemo import (
+        agent_gate,
+        confidence_gate,
+        head_to_head,
+        one_call_vs_samples,
+        questions,
+        smart_if,
+        snippets,
+    )
     from jevdemo.config import load_env, package_versions
     from jevdemo.errors import DemoError
     from jevdemo.latency import LatencyStats
@@ -44,6 +52,7 @@ def setup_imports():
         head_to_head,
         load_recording,
         mo,
+        one_call_vs_samples,
         package_versions,
         questions,
         smart_if,
@@ -395,6 +404,46 @@ def slide_09_demo3(agent_gate, badge, bar, code, error_view, esc, md, mode, reru
 
 
 @app.cell(hide_code=True)
+def slide_09b_gate_comparison(agent_gate, badge, error_view, md, mode, rerun, slide, stat, table):
+    rerun.value
+    try:
+        r3c = agent_gate.run_gate_comparison(mode)
+    except Exception as error:  # noqa: BLE001
+        r3c = None
+        _out = error_view(error)
+    if r3c is not None:
+        _rows_ = agent_gate.compare(r3c)
+        _by = {r.gate: r for r in _rows_}
+        _fmt = lambda v: "n/a" if v is None else f"${v:.6f}"  # noqa: E731
+        _labels = {"none": "geen gate", "llm": "LLM als rechter", "jev": "Jev als rechter"}
+        _table_rows = [[
+            _labels[r.gate], f"{r.total_ms / 1000:.1f} s", r.tool_calls, r.blocked,
+            f"{r.gate_ms / 1000:.1f} s", _fmt(r.agent_cost_usd), _fmt(r.gate_cost_usd), _fmt(r.total_cost_usd),
+        ] for r in _rows_]
+        _base = _by["none"].total_ms if "none" in _by else None
+        _stats = ""
+        for _k in ("llm", "jev"):
+            if _k in _by and _base:
+                _extra = _by[_k].total_ms - _base
+                _stats += stat(f"+{_extra / 1000:.1f} s", f"{_labels[_k]}: extra tijd per run")
+        if "llm" in _by and "jev" in _by and _by["jev"].gate_ms:
+            _stats += stat(f"{_by['llm'].gate_ms / _by['jev'].gate_ms:.1f}×", "gate-tijd LLM / Jev")
+        _out = slide(
+            "Dezelfde agent, drie poortwachters",
+            badge(r3c.origin),
+            f'<div class="jev-cols-3">{_stats}</div>',
+            table(["gate", "agent-run", "tool calls", "geblokkeerd", "gate-tijd", "kost agent", "kost gate", "totaal"], _table_rows, cls="compact"),
+            md(
+                "Zelfde taak, zelfde drie vragen, zelfde beleid. De LLM-rechter voegt per tool call een volledige "
+                "LLM-rondreis toe; Jev een halve seconde en een handvol tokens. "
+                "**Daarom** zet je met een LLM de check niet op elke stap, en met Jev wel."
+            ),
+        )
+    _out
+    return
+
+
+@app.cell(hide_code=True)
 def slide_10_claims_vs_measured(badge, esc, load_recording, md, slide, smart_if, table):
     try:
         _bench = load_recording("latency_benchmark")
@@ -477,6 +526,49 @@ def slide_10b_head_to_head(badge, error_view, head_to_head, md, mode, rerun, sli
                 f"Jev: `{r4.jev_model}` · {r4.workers} calls parallel · "
                 "kost: Jev $0.042 / M input-tokens (vendor), LLM volgens `LLM_PRICE_*` in `.env` · "
                 "*zelfde antwoord* is overeenstemming tussen de twee, geen ground truth"
+            ),
+        )
+    _out
+    return
+
+
+@app.cell(hide_code=True)
+def slide_10c_one_call_vs_samples(badge, bar, error_view, esc, md, mode, one_call_vs_samples, questions, rerun, slide, stat, table):
+    rerun.value
+    try:
+        r5 = one_call_vs_samples.run_one_call_vs_samples(mode)
+    except Exception as error:  # noqa: BLE001
+        r5 = None
+        _out = error_view(error)
+    if r5 is not None:
+        _cols = ""
+        for _t in r5.tickets:
+            _dist = _t.llm_distribution
+            _rows = [[
+                _label,
+                bar(_dist[_label], "win" if _label == _t.llm_majority else ""),
+                bar(_t.jev.probabilities[_label], "win" if _label == _t.jev.team else ""),
+            ] for _label in questions.TEAMS]
+            _llm_cost, _jev_cost = r5.costs(_t)
+            _cost_txt = f"${_llm_cost:.4f} vs ${_jev_cost:.6f}" if _llm_cost is not None else f"n/a vs ${_jev_cost:.6f}"
+            _cols += (
+                '<div class="jev-card">'
+                + f'<p class="jev-dim">{_t.ticket_id} · {esc(_t.text[:110])}{"…" if len(_t.text) > 110 else ""}</p>'
+                + table(["team", f"LLM: aandeel van {r5.samples} samples", "Jev: kans, 1 call"], _rows, cls="compact")
+                + '<div class="jev-cols-3">'
+                + stat(f"{_t.llm_agreement:.0%}", f"LLM eens met zichzelf · zegt zelf {_t.llm_mean_confidence:.2f}")
+                + stat(f"{_t.jev.confidence:.2f}", f"Jev confidence · spreiding over {len(_t.jev_calls)}× {_t.jev_spread:.2f}")
+                + stat(f"{_t.llm_total_ms / 1000:.0f} s", f"{r5.samples} samples vs {_t.jev.latency_ms:.0f} ms · {_cost_txt}")
+                + "</div></div>"
+            )
+        _out = slide(
+            "Eén call tegenover twintig samples",
+            badge(r5.origin),
+            f'<div class="jev-cols">{_cols}</div>',
+            md(
+                "Een LLM-antwoord is **één trekking** uit een verdeling die je nooit ziet; vraag het twintig keer en je "
+                "reconstrueert ze voor twintig keer de prijs. Jev geeft die verdeling in één call. "
+                f"LLM: `{r5.llm}` · Jev: `{r5.jev_model}`"
             ),
         )
     _out

@@ -28,8 +28,10 @@ NOTES = {
     "slide_07_demo2": "Elf tickets, een paar bewust ambigu. Dan de slider: geen nieuwe API-calls.",
     "slide_08_agent_loop": "Routing, gates, compaction, evals. Code houdt de controle.",
     "slide_09_demo3": "Het hoogtepunt: DROP TABLE op productie en het secrets-bestand worden geblokkeerd.",
+    "slide_09b_gate_comparison": "Drie runs van dezelfde agent: geen gate, LLM-rechter, Jev-rechter. Het argument: met Jev kan de check op elke stap aan staan.",
     "slide_10_claims_vs_measured": "Vendor-claims naast eigen metingen. Rode badge = placeholder, nog niet gemeten.",
     "slide_10b_head_to_head": "Zelfde tickets en tool calls, zelfde criteria-tekst, twee systemen. Snelheid, kost en hoe vaak ze het eens zijn.",
+    "slide_10c_one_call_vs_samples": "Een LLM-antwoord is één sample. Twintig keer vragen reconstrueert de verdeling die Jev in één call geeft. Let op de zelfgerapporteerde confidence.",
     "slide_11_caveats": "Early access, alpha-packages, geen reasoning, calibratie is geen correctheid.",
     "slide_12_takeaway": "Laat het LLM praten en plannen, laat System 1 kiezen. Repo-link.",
 }

@@ -116,6 +116,53 @@ def main() -> int:
                 replay = h.run_head_to_head("offline")
                 assert replay.samples == h2h.samples
                 print(f"demo4 ok  {len(h2h.samples)} samples, triage speedup x{lat:.1f} (fake numbers)")
+            # demo 5 + gate comparison, with the LLM judge faked
+            from jevdemo import llm_judge
+            from jevdemo import one_call_vs_samples as m5
+
+            def fake_team_answer(llm, prompt, state, schema):
+                return {"team": "billing", "confidence": 0.9}, 1500.0, 200, 30
+
+            with (
+                mock.patch.object(m5, "make_client", fake_client),
+                mock.patch.object(m5, "llm_answer", fake_team_answer),
+                mock.patch.object(m5, "llm_settings", lambda: type("S", (), {"label": "fake"})()),
+                mock.patch.object(m5, "build_chat_model", lambda s: object()),
+            ):
+                r5 = m5.run_one_call_vs_samples("record", samples=5, jev_repeats=2, workers=2)
+                assert len(r5.tickets) == 2 and len(r5.tickets[0].llm_samples) == 5
+                assert r5.tickets[0].llm_majority == "billing" and r5.tickets[0].llm_agreement == 1.0
+                assert abs(sum(r5.tickets[0].jev.probabilities.values()) - 1) < 0.01
+                assert m5.run_one_call_vs_samples("offline").tickets[1].text == r5.tickets[1].text
+                print(f"demo5 ok  spread over jev repeats {r5.tickets[0].jev_spread:.3f} (fake)")
+
+            def fake_gate_answer(llm, prompt, state, schema):
+                q = str(state["tool_call"]["args"]).lower()
+                return {"destructive": "drop" in q, "production": "production" in q, "secrets": "secrets" in q}, 900.0, 250, 40
+
+            calls = [
+                {"name": "run_shell", "args": {"command": "df -h", "host": "app-01"}},
+                {"name": "run_sql", "args": {"query": "DROP TABLE orders_archive_2023", "database": "orders-production"}},
+                {"name": "read_file", "args": {"path": "/etc/app/secrets.env", "host": "app-01"}},
+            ]
+            with (
+                mock.patch.object(llm_judge, "llm_answer", fake_gate_answer),
+                mock.patch.object(agent_gate, "llm_settings", lambda: type("S", (), {"label": "fake"})()),
+                mock.patch.object(agent_gate, "build_chat_model", lambda s: FakeToolCallingLLM.build(calls)),
+                mock.patch.object(agent_gate, "typesafe_api_key", lambda: "fake"),
+                mock.patch.object(agent_gate, "TypeSafeClassifier",
+                                  lambda **kw: TypeSafeClassifier(api_key="fake", client=httpx2.Client(transport=fake_transport(2)))),
+            ):
+                cmp_ = agent_gate.run_gate_comparison("record")
+                rows = {r.gate: r for r in agent_gate.compare(cmp_)}
+                assert set(rows) == {"none", "llm", "jev"}
+                assert rows["none"].blocked == 0 and rows["none"].tool_calls == 3
+                assert rows["llm"].blocked == 2, rows["llm"]          # DROP on production + secrets
+                assert rows["llm"].gate_ms == 3 * 900.0
+                replay = agent_gate.run_gate_comparison("offline")
+                assert replay.runs["llm"].decisions == cmp_.runs["llm"].decisions
+                assert agent_gate.run_agent_gate("offline", gate="jev").gate == "jev"
+                print(f"gate comparison ok  llm gate blocked {rows['llm'].blocked}/3, jev gate blocked {rows['jev'].blocked}/3 (random fake)")
     print("selftest passed")
     return 0
 

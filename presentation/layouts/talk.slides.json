@@ -52,11 +52,19 @@
       },
       {
         "type": "slide",
+        "speakerNotes": "Drie runs van dezelfde agent: geen gate, LLM-rechter, Jev-rechter. Het argument: met Jev kan de check op elke stap aan staan."
+      },
+      {
+        "type": "slide",
         "speakerNotes": "Vendor-claims naast eigen metingen. Rode badge = placeholder, nog niet gemeten."
       },
       {
         "type": "slide",
         "speakerNotes": "Zelfde tickets en tool calls, zelfde criteria-tekst, twee systemen. Snelheid, kost en hoe vaak ze het eens zijn."
+      },
+      {
+        "type": "slide",
+        "speakerNotes": "Een LLM-antwoord is één sample. Twintig keer vragen reconstrueert de verdeling die Jev in één call geeft. Let op de zelfgerapporteerde confidence."
       },
       {
         "type": "slide",

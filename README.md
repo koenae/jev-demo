@@ -45,7 +45,10 @@ exports/        talk.html en talk.pdf als fallback
 | 1 · Smart if | één ticket → één call → Choice + Score + Noul, met verdeling, confidence en latency | `uv run python demos/demo1_smart_if.py` |
 | 2 · Confidence gate | 11 tickets, automatisch afhandelen boven de drempel, anders escaleren | `uv run python demos/demo2_confidence_gate.py [--threshold 0.75]` |
 | 3 · Agent gate | LangChain-agent met gesimuleerde tools; Jev-middleware keurt elke tool call vooraf (destructief? productie? secrets?) | `uv run python demos/demo3_agent_gate.py` |
+| 3 · Gate-vergelijking | dezelfde agent-run drie keer: geen gate, het LLM als rechter, Jev als rechter; wandtijd en kost | `uv run python demos/demo3_agent_gate.py --compare` (één gate: `--gate none\|llm\|jev`) |
 | 4 · Head-to-head | dezelfde 11 tickets en 6 tool calls door het LLM (structured output, zelfde criteria-tekst) én door Jev: mediaan/p95, tokens, kost per 1000 beslissingen, overeenstemming | `uv run python demos/demo4_head_to_head.py` |
+
+| 5 · Eén call vs N samples | het LLM 20× dezelfde vraag stellen (elk antwoord is één sample) naast één Jev-call die de verdeling geeft; twee tickets, één ambigu en één duidelijk | `uv run python demos/demo5_one_call_vs_samples.py [--samples 20]` |
 
 Elke demo heeft dezelfde vlaggen:
 
@@ -97,8 +100,9 @@ Playwright zijn browser mist: `uv run playwright install chromium`.
    ```bash
    uv run python demos/demo1_smart_if.py --record
    uv run python demos/demo2_confidence_gate.py --record
-   uv run python demos/demo3_agent_gate.py --record
+   uv run python demos/demo3_agent_gate.py --record --compare   # schrijft ook demo3_agent_gate.json
    uv run python demos/demo4_head_to_head.py --record
+   uv run python demos/demo5_one_call_vs_samples.py --record
    uv run python scripts/benchmark.py --calls 10 --location "België (…), …"
    ```
 2. Op de dag zelf: `uv run python scripts/preflight.py`. Faalt het netwerk, zet dan de

@@ -1,15 +1,53 @@
-"""Demo 3 - Agent gate. Usage: uv run python demos/demo3_agent_gate.py [--record | --offline]"""
+"""Demo 3 - Agent gate.
+
+Usage: uv run python demos/demo3_agent_gate.py [--record | --offline] [--gate none|llm|jev] [--compare]
+"""
 
 from __future__ import annotations
 
-from _cli import bar, console, origin_badge, run_cli
+import argparse
+import sys
+
+from _cli import bar, console, mode_from, origin_badge, print_error
 from rich.panel import Panel
 from rich.table import Table
 
-from jevdemo.agent_gate import THRESHOLD, run_agent_gate
+from jevdemo.agent_gate import THRESHOLD, compare, run_agent_gate, run_gate_comparison
 
 
-def main(mode: str) -> None:
+def fmt_usd(value: float | None) -> str:
+    return "n/a" if value is None else f"${value:.5f}"
+
+
+def main_compare(mode: str) -> None:
+    console.print(
+        Panel(
+            "Same task, three runs: no gate, the LLM as judge on every tool call, Jev as judge. "
+            "Wall time and cost of the whole agent run.",
+            title="Demo 3 - Gate comparison",
+            style="cyan",
+        )
+    )
+    result = run_gate_comparison(mode)  # type: ignore[arg-type]
+    console.print(origin_badge(result.origin))
+    table = Table(title="none vs LLM gate vs Jev gate")
+    for col in ("gate", "agent run", "tool calls", "blocked", "gate time", "agent cost", "gate cost", "total cost"):
+        table.add_column(col, justify="left" if col == "gate" else "right")
+    for row in compare(result):
+        style = "green" if row.gate == "jev" else ""
+        table.add_row(
+            f"[{style}]{row.gate}[/{style}]" if style else row.gate,
+            f"{row.total_ms / 1000:.1f} s", str(row.tool_calls), str(row.blocked),
+            f"{row.gate_ms / 1000:.1f} s", fmt_usd(row.agent_cost_usd), fmt_usd(row.gate_cost_usd), fmt_usd(row.total_cost_usd),
+        )
+    console.print(table)
+    if result.llm_usd_per_mtok is None:
+        console.print("[yellow]Tip: set LLM_PRICE_INPUT_PER_MTOK / LLM_PRICE_OUTPUT_PER_MTOK in .env for the cost columns.[/yellow]")
+    if mode == "record":
+        console.print("[green]Recordings saved: demo3_gate_comparison.json (+ demo3_agent_gate.json refreshed)[/green]")
+
+
+def main(mode: str, gate: str = "jev") -> None:
     console.print(
         Panel(
             "LangChain agent with simulated ops tools. Jev middleware judges EVERY tool call "
@@ -18,9 +56,9 @@ def main(mode: str) -> None:
             style="cyan",
         )
     )
-    result = run_agent_gate(mode)  # type: ignore[arg-type]
+    result = run_agent_gate(mode, gate=gate)  # type: ignore[arg-type]
     console.print(origin_badge(result.origin))
-    console.print(Panel(result.task, title="Task given to the agent", border_style="blue"))
+    console.print(Panel(result.task, title=f"Task given to the agent (gate: {result.gate})", border_style="blue"))
 
     table = Table(title=f"Gate decisions (block threshold {THRESHOLD:.2f})", show_lines=True)
     table.add_column("#", justify="right")
@@ -55,4 +93,18 @@ def main(mode: str) -> None:
 
 
 if __name__ == "__main__":
-    run_cli("Demo 3 - Jev as a gate in front of every agent tool call", main)
+    parser = argparse.ArgumentParser(description="Demo 3 - a gate in front of every agent tool call")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--record", action="store_true")
+    group.add_argument("--offline", action="store_true")
+    parser.add_argument("--gate", choices=("none", "llm", "jev"), default="jev", help="who judges the tool calls")
+    parser.add_argument("--compare", action="store_true", help="run all three gates and compare time and cost")
+    args = parser.parse_args()
+    try:
+        if args.compare:
+            main_compare(mode_from(args))
+        else:
+            main(mode_from(args), args.gate)
+    except Exception as error:  # noqa: BLE001
+        print_error(error)
+        sys.exit(1)

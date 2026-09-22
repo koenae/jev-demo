@@ -19,8 +19,10 @@
 7. **Demo 2.** Zie hieronder. Druk → voor het fragment met de tabel; dan de slider.
 8. **Agent-loop.** Vier plekken: routing (welk model/agent, `ModelRouterMiddleware`), gates (mag deze tool call, `AutoModeMiddleware` of eigen middleware), compaction (wat is nog relevant), evals (is dit antwoord ok, per turn in ms). Code houdt de controle.
 9. **Demo 3.** Zie hieronder. Het hoogtepunt van de talk.
+9b. **Gate-vergelijking.** Drie runs van dezelfde taak. De middelste kolom (LLM als rechter) is de eerlijke vergelijking: dezelfde vragen, hetzelfde beleid, maar elke tool call kost een extra LLM-rondreis. Conclusie in één zin: met een LLM zet je die check niet op elke stap, met Jev wel.
 10. **Claims vs metingen.** Vendor: 70–500 ms, $0.042/MTok input, output gratis, "193.6× / 444.6×" op hun eigen workflow-evals (bovengrens, zeggen ze zelf), US West Coast. Daarnaast jouw metingen. Rode badge = nog niet gemeten.
 10b. **Head-to-head (demo 4).** Zie hieronder. Dit is de slide met de cijfers voor de blogpost.
+10c. **Eén call vs twintig samples.** Links het ambigue ticket: het LLM flipt tussen billing en technical en zegt toch 0.9 confidence; Jev zit rond 0.5/0.5 en zegt dat ook. Rechts het duidelijke ticket: beide stabiel, dus het LLM is niet alleen op zijn zwakste punt betrapt. Zin om te onthouden: een LLM-antwoord is één trekking uit een verdeling die je nooit ziet.
 11. **Kanttekeningen.** Early access; vendor-benchmarks; EU-latency (RTT naar de westkust komt er bovenop); alpha-packages (`langchain-typesafe` 0.0.1a3, eerste release 17 sept 2026); geen reasoning-output; gecalibreerd ≠ correct; confidence is geen toestemming.
 12. **Takeaway.** Laat het LLM praten en plannen, laat System 1 kiezen. Begin met één smart if in een bestaande flow. Repo-link.
 
@@ -43,6 +45,15 @@
 - **Eerlijkheid:** het LLM krijgt dezelfde criteria en een JSON-schema; `LLM_REASONING_EFFORT=minimal` voor gpt-5-modellen (anders meet je vooral reasoning-tokens); beide systemen 4 calls parallel. Vermeld de LLM-prijzen die je in `.env` zette.
 - **Als live faalt:** ~34 calls, waarvan 17 naar het LLM; live duurt 15–40 s. Doe dit bij voorkeur vooraf met `--record` en toon offline; de slide werkt in beide modi.
 
+### Demo 3b · Gate-vergelijking (`demos/demo3_agent_gate.py --compare`)
+- **Wat het publiek moet zien:** drie rijen: geen gate, LLM-gate, Jev-gate; wandtijd van de hele agent-run, gate-tijd apart, kost agent en kost gate. De LLM-gate gebruikt `LLMToolGate`: dezelfde drie vragen via structured output en hetzelfde `decide()`, maar met booleans in plaats van kansen (een LLM geeft geen verdeling).
+- **Als live faalt:** drie agent-runs zijn traag (30–90 s) en het LLM kan per run andere tool calls kiezen; toon dit offline. Live is alleen zinvol als je tijd over hebt.
+
+### Demo 5 · Eén call vs N samples (`jevdemo/one_call_vs_samples.py`)
+- **Wat het publiek moet zien:** per ticket twee kolommen balkjes: het aandeel van de 20 LLM-samples per label, en Jev's kansen uit één call. Daaronder: hoe vaak het LLM het met zichzelf eens is tegenover wat het zelf als confidence rapporteert, Jev's confidence en de spreiding over 3 herhaalde calls, en tijd/kost van 20 samples tegenover 1 call.
+- **Eerlijkheid:** het LLM krijgt dezelfde teamcriteria en mag zijn confidence zelf rapporteren (`TeamAnswer`). Bij gpt-5-modellen kan je de temperatuur niet zetten; de samples zijn dus de standaard-sampling van het model. Vermeld dat.
+- **Als live faalt:** 40 LLM-calls plus 6 Jev-calls, 4 parallel: reken op 20–40 s. Neem vooraf op en toon offline.
+
 ## Gemeten latencies vanuit België
 
 **Nog niet gemeten.** `recordings/latency_benchmark.json` bevat placeholderwaarden
@@ -61,6 +72,7 @@ uv run python scripts/benchmark.py --calls 10 --location "België (Gent), glasve
 | 3 · agent gate (3 Noul-vragen per tool call, via `TypeSafeClassifier`) | | | | |
 | 4 · head-to-head, Jev triage / gate | | | | |
 | 4 · head-to-head, LLM triage / gate | | | | model + reasoning effort: |
+| 5 · LLM samples (per call) / Jev | | | | |
 
 Context om te vermelden: de service draait aan de US West Coast; RTT vanuit België naar
 Californië is doorgaans ~140–160 ms (meet het zelf met `ping`/`curl -w` naar
@@ -104,6 +116,11 @@ Californië is doorgaans ~140–160 ms (meet het zelf met `ping`/`curl -w` naar
 - `ModelRouterMiddleware` bestaat ook (Choice kiest een model); wordt alleen genoemd op slide 8.
 - Default timeout van de classifier is 30 s (SDK: 10 s).
 
+**Demo 3b / 4 / 5: de LLM-rechter (`jevdemo/llm_judge.py`)**
+- Eén module bouwt de prompts uit dezelfde criteria-tekst als Jev en doet de structured-output-call; demo 3 (`LLMToolGate`), 4 en 5 gebruiken dezelfde `llm_answer()`.
+- `LLMToolGate` zet de booleans om naar 0.0/1.0 zodat `decide()` ongewijzigd blijft; dat betekent ook dat de drempel bij de LLM-gate niets meer doet.
+- Tokens van de agent zelf komen uit `usage_metadata` op de AI-berichten in de eindstate; tokens van de gate worden in de middleware geteld.
+
 **Demo 4 / structured output**
 - `llm.with_structured_output(Schema, include_raw=True)` geeft `{"raw": AIMessage, "parsed": Schema|None, "parsing_error"}`; tokens zitten in `raw.usage_metadata` (`input_tokens`, `output_tokens`; bij gpt-5 zitten reasoning-tokens in de output).
 - Demo 3's `GATE_QUESTIONS` zijn langchain-typesafe-types; het SDK accepteert ze als dicts via `q.model_dump()` (`type: "noul"` zit erin).
@@ -130,7 +147,7 @@ Californië is doorgaans ~140–160 ms (meet het zelf met `ping`/`curl -w` naar
 1. **Docs niet gelezen, wel de source.** `docs.typesafe.ai`, `docs.langchain.com/.../typesafe` en `docs.marimo.io` waren geblokkeerd. Alle API-gebruik is gebaseerd op de geïnstalleerde source van `typesafe-sdk 0.7.0` (incl. de gegenereerde OpenAPI-schema's), `langchain-typesafe 0.0.1a3`, `langchain 1.4.2`, `marimo 0.24.2`, de PyPI-README's en TypeSafe's agent-skill (`github.com/typesafe-ai/skills`, die zelf zegt: bij ontbrekende docs de SDK-types gebruiken en dat vermelden). **Te doen:** loop `https://docs.typesafe.ai/llms.txt` (primitives, confidence, api, sdk/python) en de LangChain-providerpagina na op afwijkingen, vooral rond confidence-semantiek en aanbevolen drempels.
 2. **Geen echte API-calls gedaan, dus geen echte recordings en geen metingen.** Er was geen key en `api.typesafe.ai` was onbereikbaar. `recordings/*.json` zijn synthetische placeholders (`scripts/make_placeholder_recordings.py`), overal gemarkeerd. **Te doen:** de vier `--record`/benchmark-commando's uit de README draaien, daarna `scripts/preflight.py` (alles moet groen zijn) en de tabel hierboven invullen. Herexporteer daarna `exports/`.
 3. **Demo 3 gebruikt een custom middleware**, niet `AutoModeMiddleware` (één gecombineerde vraag past niet bij "aparte Noul-vragen"). Toegestaan door de opdracht.
-4. **Demo 4 (head-to-head) is toegevoegd** na de eerste versie van de talk, op vraag; hij zit als slide 10b tussen "claims vs metingen" en "kanttekeningen". Schrap hem of slide 10 als 20 minuten te krap wordt.
+4. **Demo's 3b, 4 en 5 zijn toegevoegd** na de eerste versie, op vraag, vooral voor de blogpost. Ze zitten als slides 9b, 10b en 10c in de deck; voor 20 minuten schrap je er minstens twee. Voorstel: 9b en 10c in de talk, 10b in de blog. na de eerste versie van de talk, op vraag; hij zit als slide 10b tussen "claims vs metingen" en "kanttekeningen". Schrap hem of slide 10 als 20 minuten te krap wordt.
 5. **Demo 2 heeft 11 tickets** i.p.v. ~10 (drie bewust ambigu).
 6. **Slide 5 toont 14 + 5 regels code** (QUESTIONS en URGENCY_LEVELS, uit `jevdemo/`), iets meer dan "max ~15" in totaal, zodat alle drie de primitives zichtbaar zijn. Andere fragmenten zijn ≤ 15 regels.
 7. **Demo 3 offline** speelt de volledige opgenomen trace af (ook het LLM-deel): LLM-output is niet deterministisch, dus "alleen de Jev-antwoorden" replayen zou geen zin hebben.
