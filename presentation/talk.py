@@ -24,7 +24,7 @@ def setup_imports():
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
 
-    from jevdemo import agent_gate, confidence_gate, questions, smart_if, snippets
+    from jevdemo import agent_gate, confidence_gate, head_to_head, questions, smart_if, snippets
     from jevdemo.config import load_env, package_versions
     from jevdemo.errors import DemoError
     from jevdemo.latency import LatencyStats
@@ -41,6 +41,7 @@ def setup_imports():
         agent_gate,
         confidence_gate,
         esc,
+        head_to_head,
         load_recording,
         mo,
         package_versions,
@@ -435,6 +436,50 @@ def slide_10_claims_vs_measured(badge, esc, load_recording, md, slide, smart_if,
         ),
         "</div></div>",
     )
+    return
+
+
+@app.cell(hide_code=True)
+def slide_10b_head_to_head(badge, error_view, head_to_head, md, mode, rerun, slide, stat, table):
+    rerun.value
+    try:
+        r4 = head_to_head.run_head_to_head(mode)
+    except Exception as error:  # noqa: BLE001
+        r4 = None
+        _out = error_view(error)
+    if r4 is not None:
+        _sum = head_to_head.summarize(r4)
+        _rows = []
+        for (_task, _system), _s in _sum.items():
+            _cost = "n/a" if _s.cost_per_1000_usd is None else f"${_s.cost_per_1000_usd:.4f}"
+            _cls = "jev-auto" if _system == "jev" else ""
+            _rows.append([
+                _task, f'<span class="{_cls}">{_system}</span>', _s.n,
+                f"{_s.latency.median_ms:.0f} ms", f"{_s.latency.p95_ms:.0f} ms",
+                f"{_s.input_tokens} / {_s.output_tokens}", _cost,
+            ])
+        _stats = ""
+        for _task in ("triage", "gate"):
+            _lat, _cost = head_to_head.speedup(_sum, _task)
+            _agree = head_to_head.agreement(r4, _task)
+            _agree_txt = ", ".join(f"{k} {v:.0%}" for k, v in _agree.items())
+            _mean = sum(_agree.values()) / len(_agree) if _agree else 0.0
+            _stats += stat(f"{_lat:.1f}×" if _lat else "–", f"{_task}: sneller (mediaan)")
+            _stats += stat(f"{_cost:.0f}×" if _cost else "n/a", f"{_task}: goedkoper")
+            _stats += stat(f"{_mean:.0%}", f"{_task}: zelfde antwoord ({_agree_txt})")
+        _out = slide(
+            "Head-to-head · dezelfde beslissingen door het LLM en door Jev",
+            badge(r4.origin),
+            f'<div class="jev-cols-3" style="grid-template-columns: repeat(6, 1fr)">{_stats}</div>',
+            table(["taak", "systeem", "n", "mediaan", "p95", "tokens in / uit", "kost per 1000"], _rows, cls="compact"),
+            md(
+                f"LLM: `{r4.llm}` met structured output en **dezelfde criteria-tekst** · "
+                f"Jev: `{r4.jev_model}` · {r4.workers} calls parallel · "
+                "kost: Jev $0.042 / M input-tokens (vendor), LLM volgens `LLM_PRICE_*` in `.env` · "
+                "*zelfde antwoord* is overeenstemming tussen de twee, geen ground truth"
+            ),
+        )
+    _out
     return
 
 

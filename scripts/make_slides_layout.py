@@ -29,6 +29,7 @@ NOTES = {
     "slide_08_agent_loop": "Routing, gates, compaction, evals. Code houdt de controle.",
     "slide_09_demo3": "Het hoogtepunt: DROP TABLE op productie en het secrets-bestand worden geblokkeerd.",
     "slide_10_claims_vs_measured": "Vendor-claims naast eigen metingen. Rode badge = placeholder, nog niet gemeten.",
+    "slide_10b_head_to_head": "Zelfde tickets en tool calls, zelfde criteria-tekst, twee systemen. Snelheid, kost en hoe vaak ze het eens zijn.",
     "slide_11_caveats": "Early access, alpha-packages, geen reasoning, calibratie is geen correctheid.",
     "slide_12_takeaway": "Laat het LLM praten en plannen, laat System 1 kiezen. Repo-link.",
 }

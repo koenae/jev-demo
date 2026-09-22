@@ -45,11 +45,17 @@ exports/        talk.html en talk.pdf als fallback
 | 1 · Smart if | één ticket → één call → Choice + Score + Noul, met verdeling, confidence en latency | `uv run python demos/demo1_smart_if.py` |
 | 2 · Confidence gate | 11 tickets, automatisch afhandelen boven de drempel, anders escaleren | `uv run python demos/demo2_confidence_gate.py [--threshold 0.75]` |
 | 3 · Agent gate | LangChain-agent met gesimuleerde tools; Jev-middleware keurt elke tool call vooraf (destructief? productie? secrets?) | `uv run python demos/demo3_agent_gate.py` |
+| 4 · Head-to-head | dezelfde 11 tickets en 6 tool calls door het LLM (structured output, zelfde criteria-tekst) én door Jev: mediaan/p95, tokens, kost per 1000 beslissingen, overeenstemming | `uv run python demos/demo4_head_to_head.py` |
 
 Elke demo heeft dezelfde vlaggen:
 
 - `--record` : roept de API aan én bewaart het antwoord in `recordings/<demo>.json`
 - `--offline`: speelt de opname af, zonder netwerk of key
+
+Demo 4 heeft het LLM én TypeSafe nodig. Zet `LLM_PRICE_INPUT_PER_MTOK` en
+`LLM_PRICE_OUTPUT_PER_MTOK` (USD per miljoen tokens, van de prijspagina van je provider) in
+`.env` voor de kostenkolommen; voor gpt-5-modellen is `LLM_REASONING_EFFORT=minimal` de
+eerlijkste snelheidsvergelijking. De calls lopen 4 tegelijk.
 
 Voor demo 3 wordt niets echt uitgevoerd: de shell-, SQL- en file-tools zijn nep en geven
 vaste tekst terug. De LLM (OpenAI, Anthropic of Azure OpenAI, zie `.env.example`) plant
@@ -92,6 +98,7 @@ Playwright zijn browser mist: `uv run playwright install chromium`.
    uv run python demos/demo1_smart_if.py --record
    uv run python demos/demo2_confidence_gate.py --record
    uv run python demos/demo3_agent_gate.py --record
+   uv run python demos/demo4_head_to_head.py --record
    uv run python scripts/benchmark.py --calls 10 --location "België (…), …"
    ```
 2. Op de dag zelf: `uv run python scripts/preflight.py`. Faalt het netwerk, zet dan de

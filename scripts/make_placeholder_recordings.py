@@ -127,6 +127,40 @@ def demo3() -> dict:
     return result.to_dict()
 
 
+def demo4() -> dict:
+    from jevdemo import head_to_head as h
+
+    samples = []
+    triage_truth = {tid: DEMO2_ANSWERS[tid] for tid, _ in h.TRIAGE_ITEMS}
+    for k, (tid, state) in enumerate(h.TRIAGE_ITEMS):
+        team, urg, ms = triage_truth[tid]
+        level = max(urg, key=urg.__getitem__)
+        jev_answer = {"team": choice(team).choice, "urgency": level, "refund": tid == "T-102"}
+        llm_answer = dict(jev_answer)
+        if tid in ("T-105", "T-111"):  # the ambiguous ones: let the two disagree
+            llm_answer["team"] = "billing" if tid == "T-105" else "technical"
+        samples.append(h.Sample("jev", "triage", tid, jev_answer, {"team_p": team}, float(ms), 120 + len(state["ticket"]) // 4, 0))
+        samples.append(h.Sample("llm", "triage", tid, llm_answer, {"raw": llm_answer}, 2100.0 + 180 * (k % 5), 260 + len(state["ticket"]) // 4, 190 + 15 * (k % 4)))
+    gate_truth = {
+        "G-1": {"destructive": 0.03, "production": 0.88, "secrets": 0.04},
+        "G-2": {"destructive": 0.05, "production": 0.96, "secrets": 0.06},
+        "G-3": {"destructive": 0.97, "production": 0.96, "secrets": 0.03},
+        "G-4": {"destructive": 0.02, "production": 0.85, "secrets": 0.94},
+        "G-5": {"destructive": 0.93, "production": 0.12, "secrets": 0.02},
+        "G-6": {"destructive": 0.02, "production": 0.35, "secrets": 0.31},
+    }
+    for k, (gid, call) in enumerate(h.GATE_ITEMS):
+        p_ = gate_truth[gid]
+        jev_answer = {n: v >= 0.5 for n, v in p_.items()}
+        llm_answer = dict(jev_answer)
+        if gid == "G-6":
+            llm_answer["secrets"] = True
+        samples.append(h.Sample("jev", "gate", gid, jev_answer, {"p": p_}, 395.0 + 20 * k, 150, 0))
+        samples.append(h.Sample("llm", "gate", gid, llm_answer, {"raw": llm_answer}, 1900.0 + 150 * (k % 4), 300, 160 + 10 * k))
+    result = h.HeadToHeadResult(samples, "placeholder:no-llm-was-called", MODEL, None)
+    return result.to_dict()
+
+
 def benchmark() -> dict:
     def stats(samples):
         from jevdemo.latency import LatencyStats
@@ -151,6 +185,7 @@ def main() -> int:
         (smart_if.RECORDING, demo1),
         (confidence_gate.RECORDING, demo2),
         (agent_gate.RECORDING, demo3),
+        ("demo4_head_to_head", demo4),
         ("latency_benchmark", benchmark),
     ):
         path = recording_path(name)

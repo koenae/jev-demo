@@ -83,7 +83,7 @@ def check_llm() -> list[Row]:
 
 def check_recordings() -> list[Row]:
     rows: list[Row] = []
-    for name in (smart_if.RECORDING, confidence_gate.RECORDING, agent_gate.RECORDING, "latency_benchmark"):
+    for name in (smart_if.RECORDING, confidence_gate.RECORDING, agent_gate.RECORDING, "demo4_head_to_head", "latency_benchmark"):
         path = recording_path(name)
         if not path.exists():
             rows.append((f"recording {name}", False, "missing - run the demo with --record"))

@@ -92,6 +92,30 @@ def main() -> int:
             replay = agent_gate.run_agent_gate("offline")
             assert replay.decisions == ordered and replay.final_answer == "Report: done."
             print(f"demo3 ok  middleware ran, blocked={len(replay.blocked)}/3 (random fake probabilities)")
+            from jevdemo import head_to_head as h
+
+            def fake_llm_answer(llm, prompt, state, schema):
+                if schema is h.TriageAnswer:
+                    return {"team": "billing", "urgency": 1, "refund": False}, 1500.0, 300, 120
+                return {"destructive": True, "production": True, "secrets": False}, 1200.0, 250, 60
+
+            with (
+                mock.patch.object(h, "make_client", fake_client),
+                mock.patch.object(h, "llm_answer", fake_llm_answer),
+                mock.patch.object(h, "llm_settings", lambda: type("S", (), {"label": "fake"})()),
+                mock.patch.object(h, "build_chat_model", lambda s: object()),
+            ):
+                h2h = h.run_head_to_head("record", workers=2)
+                assert len(h2h.samples) == 2 * (len(h.TRIAGE_ITEMS) + len(h.GATE_ITEMS))
+                summary = h.summarize(h2h)
+                assert set(summary) == {("triage", "jev"), ("triage", "llm"), ("gate", "jev"), ("gate", "llm")}
+                lat, cost = h.speedup(summary, "triage")
+                assert lat and lat > 1 and cost is None  # no LLM prices configured
+                agree = h.agreement(h2h, "gate")
+                assert set(agree) == {"destructive", "production", "secrets"}
+                replay = h.run_head_to_head("offline")
+                assert replay.samples == h2h.samples
+                print(f"demo4 ok  {len(h2h.samples)} samples, triage speedup x{lat:.1f} (fake numbers)")
     print("selftest passed")
     return 0
 

@@ -56,6 +56,10 @@
       },
       {
         "type": "slide",
+        "speakerNotes": "Zelfde tickets en tool calls, zelfde criteria-tekst, twee systemen. Snelheid, kost en hoe vaak ze het eens zijn."
+      },
+      {
+        "type": "slide",
         "speakerNotes": "Early access, alpha-packages, geen reasoning, calibratie is geen correctheid."
       },
       {
