@@ -1,7 +1,7 @@
 {
   "demo": "demo5_one_call_vs_samples",
-  "source": "synthetic-placeholder",
-  "recorded_at": "2026-09-23T12:27:35+00:00",
+  "source": "live",
+  "recorded_at": "2026-09-23T17:41:26+00:00",
   "versions": {
     "typesafe-sdk": "0.7.0",
     "langchain": "1.4.2",
@@ -21,179 +21,179 @@
         "text": "My subscription renewed but the new features from the upgrade aren't showing. Did the payment go through or is this a bug?",
         "llm_samples": [
           {
+            "team": "technical",
+            "confidence": 0.78,
+            "latency_ms": 2134.0,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
             "team": "billing",
-            "confidence": 0.87,
-            "latency_ms": 2100.0,
-            "input_tokens": 210,
-            "output_tokens": 40
+            "confidence": 0.85,
+            "latency_ms": 2130.9,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 2213.7,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.75,
+            "latency_ms": 2133.2,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.75,
+            "latency_ms": 1459.8,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "technical",
-            "confidence": 0.88,
-            "latency_ms": 2190.0,
-            "input_tokens": 210,
-            "output_tokens": 41
+            "confidence": 0.8,
+            "latency_ms": 2026.7,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "billing",
-            "confidence": 0.89,
-            "latency_ms": 2280.0,
-            "input_tokens": 210,
-            "output_tokens": 42
+            "confidence": 0.9,
+            "latency_ms": 1487.0,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "billing",
-            "confidence": 0.87,
-            "latency_ms": 2370.0,
-            "input_tokens": 210,
-            "output_tokens": 43
+            "confidence": 0.86,
+            "latency_ms": 930.8,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1933.6,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1085.6,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.8,
+            "latency_ms": 1834.8,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.85,
+            "latency_ms": 1551.9,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1821.1,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "technical",
-            "confidence": 0.88,
-            "latency_ms": 2460.0,
-            "input_tokens": 210,
-            "output_tokens": 44
-          },
-          {
-            "team": "billing",
-            "confidence": 0.89,
-            "latency_ms": 2550.0,
-            "input_tokens": 210,
-            "output_tokens": 40
+            "confidence": 0.8,
+            "latency_ms": 1510.0,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "technical",
-            "confidence": 0.87,
-            "latency_ms": 2640.0,
-            "input_tokens": 210,
-            "output_tokens": 41
-          },
-          {
-            "team": "billing",
-            "confidence": 0.88,
-            "latency_ms": 2100.0,
-            "input_tokens": 210,
-            "output_tokens": 42
-          },
-          {
-            "team": "billing",
-            "confidence": 0.89,
-            "latency_ms": 2190.0,
-            "input_tokens": 210,
-            "output_tokens": 43
-          },
-          {
-            "team": "technical",
-            "confidence": 0.87,
-            "latency_ms": 2280.0,
-            "input_tokens": 210,
-            "output_tokens": 44
-          },
-          {
-            "team": "technical",
-            "confidence": 0.88,
-            "latency_ms": 2370.0,
-            "input_tokens": 210,
-            "output_tokens": 40
-          },
-          {
-            "team": "billing",
-            "confidence": 0.89,
-            "latency_ms": 2460.0,
-            "input_tokens": 210,
-            "output_tokens": 41
-          },
-          {
-            "team": "billing",
-            "confidence": 0.87,
-            "latency_ms": 2550.0,
-            "input_tokens": 210,
-            "output_tokens": 42
-          },
-          {
-            "team": "sales",
-            "confidence": 0.88,
-            "latency_ms": 2640.0,
-            "input_tokens": 210,
-            "output_tokens": 43
-          },
-          {
-            "team": "billing",
-            "confidence": 0.89,
-            "latency_ms": 2100.0,
-            "input_tokens": 210,
-            "output_tokens": 44
-          },
-          {
-            "team": "technical",
-            "confidence": 0.87,
-            "latency_ms": 2190.0,
-            "input_tokens": 210,
-            "output_tokens": 40
+            "confidence": 0.9,
+            "latency_ms": 1667.9,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "billing",
             "confidence": 0.88,
-            "latency_ms": 2280.0,
-            "input_tokens": 210,
-            "output_tokens": 41
+            "latency_ms": 1633.7,
+            "input_tokens": 194,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.85,
+            "latency_ms": 1610.8,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "technical",
-            "confidence": 0.89,
-            "latency_ms": 2370.0,
-            "input_tokens": 210,
-            "output_tokens": 42
+            "confidence": 0.8,
+            "latency_ms": 1561.8,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "billing",
-            "confidence": 0.87,
-            "latency_ms": 2460.0,
-            "input_tokens": 210,
-            "output_tokens": 43
+            "confidence": 0.8,
+            "latency_ms": 1349.4,
+            "input_tokens": 194,
+            "output_tokens": 24
           },
           {
             "team": "billing",
-            "confidence": 0.88,
-            "latency_ms": 2550.0,
-            "input_tokens": 210,
-            "output_tokens": 44
+            "confidence": 0.9,
+            "latency_ms": 1541.6,
+            "input_tokens": 194,
+            "output_tokens": 24
           }
         ],
         "jev_calls": [
           {
             "probabilities": {
-              "billing": 0.49,
-              "technical": 0.47,
-              "sales": 0.02,
-              "other": 0.02
+              "other": 0.0,
+              "technical": 0.45,
+              "billing": 0.54,
+              "sales": 0.01
             },
-            "confidence": 0.49,
-            "latency_ms": 380.0,
-            "input_tokens": 95
+            "confidence": 0.38,
+            "latency_ms": 423.8,
+            "input_tokens": 400
           },
           {
             "probabilities": {
-              "billing": 0.49,
-              "technical": 0.47,
-              "sales": 0.02,
-              "other": 0.02
+              "other": 0.0,
+              "billing": 0.43,
+              "technical": 0.56,
+              "sales": 0.01
             },
-            "confidence": 0.49,
-            "latency_ms": 395.0,
-            "input_tokens": 95
+            "confidence": 0.41,
+            "latency_ms": 494.2,
+            "input_tokens": 400
           },
           {
             "probabilities": {
-              "billing": 0.49,
-              "technical": 0.47,
-              "sales": 0.02,
-              "other": 0.02
+              "other": 0.0,
+              "billing": 0.42,
+              "technical": 0.56,
+              "sales": 0.02
             },
-            "confidence": 0.49,
-            "latency_ms": 410.0,
-            "input_tokens": 95
+            "confidence": 0.41,
+            "latency_ms": 330.0,
+            "input_tokens": 400
           }
         ]
       },
@@ -203,185 +203,188 @@
         "llm_samples": [
           {
             "team": "billing",
-            "confidence": 0.96,
-            "latency_ms": 2100.0,
-            "input_tokens": 210,
-            "output_tokens": 40
+            "confidence": 0.95,
+            "latency_ms": 1093.7,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.95,
+            "latency_ms": 1091.5,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 2160.9,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.95,
+            "latency_ms": 1368.4,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.95,
+            "latency_ms": 1463.4,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1343.2,
+            "input_tokens": 186,
+            "output_tokens": 24
           },
           {
             "team": "billing",
             "confidence": 0.97,
-            "latency_ms": 2190.0,
-            "input_tokens": 210,
-            "output_tokens": 41
+            "latency_ms": 973.7,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.95,
+            "latency_ms": 1756.6,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1230.5,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.95,
+            "latency_ms": 1293.4,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1189.5,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1245.5,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.95,
+            "latency_ms": 1658.1,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1641.4,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 765.3,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1801.7,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.99,
+            "latency_ms": 1684.2,
+            "input_tokens": 186,
+            "output_tokens": 24
+          },
+          {
+            "team": "billing",
+            "confidence": 0.9,
+            "latency_ms": 1244.5,
+            "input_tokens": 186,
+            "output_tokens": 24
           },
           {
             "team": "billing",
             "confidence": 0.98,
-            "latency_ms": 2280.0,
-            "input_tokens": 210,
-            "output_tokens": 42
+            "latency_ms": 1271.3,
+            "input_tokens": 186,
+            "output_tokens": 24
           },
           {
             "team": "billing",
-            "confidence": 0.96,
-            "latency_ms": 2370.0,
-            "input_tokens": 210,
-            "output_tokens": 43
-          },
-          {
-            "team": "billing",
-            "confidence": 0.97,
-            "latency_ms": 2460.0,
-            "input_tokens": 210,
-            "output_tokens": 44
-          },
-          {
-            "team": "billing",
-            "confidence": 0.98,
-            "latency_ms": 2550.0,
-            "input_tokens": 210,
-            "output_tokens": 40
-          },
-          {
-            "team": "billing",
-            "confidence": 0.96,
-            "latency_ms": 2640.0,
-            "input_tokens": 210,
-            "output_tokens": 41
-          },
-          {
-            "team": "billing",
-            "confidence": 0.97,
-            "latency_ms": 2100.0,
-            "input_tokens": 210,
-            "output_tokens": 42
-          },
-          {
-            "team": "billing",
-            "confidence": 0.98,
-            "latency_ms": 2190.0,
-            "input_tokens": 210,
-            "output_tokens": 43
-          },
-          {
-            "team": "billing",
-            "confidence": 0.96,
-            "latency_ms": 2280.0,
-            "input_tokens": 210,
-            "output_tokens": 44
-          },
-          {
-            "team": "billing",
-            "confidence": 0.97,
-            "latency_ms": 2370.0,
-            "input_tokens": 210,
-            "output_tokens": 40
-          },
-          {
-            "team": "billing",
-            "confidence": 0.98,
-            "latency_ms": 2460.0,
-            "input_tokens": 210,
-            "output_tokens": 41
-          },
-          {
-            "team": "billing",
-            "confidence": 0.96,
-            "latency_ms": 2550.0,
-            "input_tokens": 210,
-            "output_tokens": 42
-          },
-          {
-            "team": "billing",
-            "confidence": 0.97,
-            "latency_ms": 2640.0,
-            "input_tokens": 210,
-            "output_tokens": 43
-          },
-          {
-            "team": "billing",
-            "confidence": 0.98,
-            "latency_ms": 2100.0,
-            "input_tokens": 210,
-            "output_tokens": 44
-          },
-          {
-            "team": "billing",
-            "confidence": 0.96,
-            "latency_ms": 2190.0,
-            "input_tokens": 210,
-            "output_tokens": 40
-          },
-          {
-            "team": "billing",
-            "confidence": 0.97,
-            "latency_ms": 2280.0,
-            "input_tokens": 210,
-            "output_tokens": 41
-          },
-          {
-            "team": "billing",
-            "confidence": 0.98,
-            "latency_ms": 2370.0,
-            "input_tokens": 210,
-            "output_tokens": 42
-          },
-          {
-            "team": "billing",
-            "confidence": 0.96,
-            "latency_ms": 2460.0,
-            "input_tokens": 210,
-            "output_tokens": 43
-          },
-          {
-            "team": "billing",
-            "confidence": 0.97,
-            "latency_ms": 2550.0,
-            "input_tokens": 210,
-            "output_tokens": 44
+            "confidence": 0.95,
+            "latency_ms": 1641.3,
+            "input_tokens": 186,
+            "output_tokens": 24
           }
         ],
         "jev_calls": [
           {
             "probabilities": {
-              "billing": 0.96,
-              "technical": 0.02,
-              "sales": 0.01,
-              "other": 0.01
+              "other": 0.0,
+              "billing": 1.0,
+              "sales": 0.0,
+              "technical": 0.0
             },
-            "confidence": 0.96,
-            "latency_ms": 380.0,
-            "input_tokens": 95
+            "confidence": 1.0,
+            "latency_ms": 378.1,
+            "input_tokens": 392
           },
           {
             "probabilities": {
-              "billing": 0.96,
-              "technical": 0.02,
-              "sales": 0.01,
-              "other": 0.01
+              "billing": 1.0,
+              "other": 0.0,
+              "sales": 0.0,
+              "technical": 0.0
             },
-            "confidence": 0.96,
-            "latency_ms": 395.0,
-            "input_tokens": 95
+            "confidence": 1.0,
+            "latency_ms": 362.9,
+            "input_tokens": 392
           },
           {
             "probabilities": {
-              "billing": 0.96,
-              "technical": 0.02,
-              "sales": 0.01,
-              "other": 0.01
+              "other": 0.0,
+              "billing": 1.0,
+              "sales": 0.0,
+              "technical": 0.0
             },
-            "confidence": 0.96,
-            "latency_ms": 410.0,
-            "input_tokens": 95
+            "confidence": 1.0,
+            "latency_ms": 304.9,
+            "input_tokens": 392
           }
         ]
       }
     ],
-    "llm": "placeholder:no-llm-was-called",
-    "jev_model": "jev-placeholder (synthetic, not a real model answer)",
+    "llm": "openai:gpt-5-mini",
+    "jev_model": "jev-latest",
     "samples": 20,
-    "llm_usd_per_mtok": null
+    "llm_usd_per_mtok": [
+      0.25,
+      2.0
+    ]
   }
 }
