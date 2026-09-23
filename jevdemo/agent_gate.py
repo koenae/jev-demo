@@ -416,6 +416,13 @@ class GateRow:
     agent_cost_usd: float | None   # medians of cost
     gate_cost_usd: float | None
     total_cost_usd: float | None
+    gate_cost_per_call_usd: float | None = None
+
+    def projection(self, calls: int = 10_000) -> tuple[float | None, float | None]:
+        """(judge hours, USD) for `calls` judged tool calls: a linear projection, not a measurement."""
+        hours = None if self.gate_ms_per_call is None else self.gate_ms_per_call * calls / 3.6e6
+        usd = None if self.gate_cost_per_call_usd is None else self.gate_cost_per_call_usd * calls
+        return hours, usd
 
 
 def _median(values: list[float | None]) -> float | None:
@@ -436,6 +443,8 @@ def compare(c: GateComparison) -> list[GateRow]:
         agent_costs = [cost_usd("llm", r.agent_input_tokens, r.agent_output_tokens, c.llm_usd_per_mtok) for r in rs]
         gate_costs = [0.0 if kind == "none" else cost_usd(kind, r.gate_input_tokens, r.gate_output_tokens, c.llm_usd_per_mtok) for r in rs]
         totals = [None if a is None or g is None else a + g for a, g in zip(agent_costs, gate_costs)]
+        judged = sum(len(r.decisions) for r in rs)
+        gate_cost_total = sum(g for g in gate_costs if g is not None) if all(g is not None for g in gate_costs) else None
         total_ms = median(r.total_ms for r in rs)
         g_ms = median(gate_ms)
         rows.append(GateRow(
@@ -451,6 +460,7 @@ def compare(c: GateComparison) -> list[GateRow]:
             agent_cost_usd=_median(agent_costs),
             gate_cost_usd=_median(gate_costs),
             total_cost_usd=_median(totals),
+            gate_cost_per_call_usd=None if gate_cost_total is None or not judged else gate_cost_total / judged,
         ))
     return rows
 

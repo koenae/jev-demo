@@ -427,8 +427,14 @@ def slide_09b_gate_comparison(agent_gate, badge, error_view, md, mode, rerun, sl
         for _k in ("llm", "jev"):
             if _k in _by and _by[_k].gate_ms_per_call:
                 _stats += stat(f"{_by[_k].gate_ms_per_call / 1000:.1f} s", f"{_labels[_k]}: per tool call")
-        if "llm" in _by and "jev" in _by and _by["jev"].gate_ms_per_call:
-            _stats += stat(f"{_by['llm'].gate_ms_per_call / _by['jev'].gate_ms_per_call:.1f}×", "gate-tijd per call, LLM / Jev")
+        for _k in ("llm", "jev"):
+            if _k in _by:
+                _stats += stat(f"{_by[_k].gate_share:.0%}", f"{_labels[_k]}: aandeel van de run")
+        for _k in ("llm", "jev"):
+            if _k in _by:
+                _h, _usd = _by[_k].projection()
+                _usd_txt = "kost: zet LLM_PRICE_*" if _usd is None else f"${_usd:.2f}"
+                _stats += stat("–" if _h is None else f"{_h:.1f} u", f"{_labels[_k]}: 10.000 checks, projectie · {_usd_txt}")
         _n_runs = _rows_[0].runs if _rows_ else 0
         _out = slide(
             "Dezelfde agent, drie poortwachters",
@@ -436,10 +442,10 @@ def slide_09b_gate_comparison(agent_gate, badge, error_view, md, mode, rerun, sl
             f'<div class="jev-cols-3">{_stats}</div>',
             table(["gate", "gate / call", "gate-tijd", "aandeel run", "agent-run", "agent zonder gate", "tool calls", "geblokkeerd", "kost gate"], _table_rows, cls="compact"),
             md(
-                f"Medianen over {_n_runs} run(s) per gate. Zelfde taak, zelfde drie vragen, zelfde beleid. "
-                "De agent-run zelf schommelt met seconden per run (ander pad, andere redeneertijd), dus kijk naar de gate-kolommen: "
-                "de LLM-rechter kost per tool call een volledige LLM-rondreis, Jev een halve seconde. "
-                "**Daarom** zet je met een LLM de check niet op elke stap, en met Jev wel."
+                f"Medianen over {_n_runs} run(s) per gate, zelfde taak, zelfde drie vragen, zelfde beleid. "
+                "Op vier stappen is het verschil één seconde: **de winst zit niet in de wandtijd**. "
+                "Ze zit in het aandeel van de run dat toezicht is, in de kost per check op schaal, "
+                "en in kansen met een drempel in plaats van booleans die flippen."
             ),
         )
     _out

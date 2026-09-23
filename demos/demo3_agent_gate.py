@@ -53,6 +53,12 @@ def main_compare(mode: str, runs: int) -> None:
             f"-> [green]{by['llm'].gate_ms_per_call / by['jev'].gate_ms_per_call:.1f}x[/green]. "
             "The 'agent run' totals include the agent's own LLM turns, which differ per run (different paths, reasoning time)."
         )
+        proj = Table(title="Projection for 10 000 judged tool calls (linear, not measured)")
+        proj.add_column("gate"); proj.add_column("judge time", justify="right"); proj.add_column("judge cost", justify="right")
+        for kind in ("llm", "jev"):
+            hours, usd = by[kind].projection()
+            proj.add_row(kind, "-" if hours is None else f"{hours:.1f} h", fmt_usd(usd) if usd is None else f"${usd:.2f}")
+        console.print(proj)
     if result.llm_usd_per_mtok is None:
         console.print("[yellow]Tip: set LLM_PRICE_INPUT_PER_MTOK / LLM_PRICE_OUTPUT_PER_MTOK in .env for the cost columns.[/yellow]")
     if mode == "record":
