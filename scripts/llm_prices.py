@@ -110,11 +110,12 @@ def per_mtok(item: dict) -> float | None:
 
 
 def classify(name: str) -> str:
+    """Meter names look like 'GPT 5 Mini cchd Inpt Glbl 1M Tokens' or 'GPT 5 Mini Batch outpt DZone 1M Tokens'."""
     n = name.lower()
-    if "cached" in n or "cache" in n:
-        return "cached-input"
     if "batch" in n:
         return "batch"
+    if "cchd" in n or "cached" in n or "cache" in n:
+        return "cached-input"
     if "inp" in n or "input" in n:
         return "input"
     if "outp" in n or "output" in n:
@@ -126,7 +127,7 @@ def scope(name: str) -> str:
     n = name.lower()
     if "glbl" in n or "global" in n:
         return "global"
-    if "data zone" in n or "dz" in n.split():
+    if "dzone" in n or "data zone" in n or "dz" in n.split():
         return "data-zone"
     return "regional/other"
 
@@ -175,9 +176,11 @@ def main() -> int:
               f"{'-' if pm is None else f'{pm:.4f}':>10s} {classify(it['meterName']):13s} {scope(it['meterName']):14s} {it['armRegionName']}")
 
     def pick(kind: str) -> float | None:
-        cands = [per_mtok(i) for i in rows if classify(i["meterName"]) == kind and scope(i["meterName"]) == "global"]
-        cands = [c for c in cands if c is not None]
-        return min(cands) if cands else None
+        cands = {per_mtok(i) for i in rows if classify(i["meterName"]) == kind and scope(i["meterName"]) == "global"}
+        cands.discard(None)
+        if len(cands) > 1:
+            print(f"warning: several global {kind} meters ({sorted(cands)}); taking the highest, check the table", file=sys.stderr)
+        return max(cands) if cands else None  # type: ignore[type-var]
 
     inp, outp = pick("input"), pick("output")
     print()
