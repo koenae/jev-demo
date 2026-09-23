@@ -1,5 +1,5 @@
 ---
-title: "An LLM answer is one sample. Jev gives you the distribution."
+title: "What I measured when I put Jev next to gpt-5-mini"
 date: 2026-09-24
 slug: jev-vs-llm-measured
 type: posts
