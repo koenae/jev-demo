@@ -20,17 +20,80 @@ import urllib.request
 
 API = "https://prices.azure.com/api/retail/prices"
 
+# The API's `contains` is case-sensitive and the service/product naming for Foundry has moved
+# around, so we pull a few broad slices and match the model name locally, case-insensitively.
+FILTERS = [
+    "contains(productName, 'OpenAI')",
+    "contains(productName, 'Foundry')",
+    "contains(productName, 'Azure AI')",
+    "serviceName eq 'Azure OpenAI'",
+    "serviceName eq 'Cognitive Services'",
+]
 
-def fetch(model: str) -> list[dict]:
-    flt = f"serviceName eq 'Azure OpenAI' and contains(meterName, '{model}')"
+
+def _get(url: str) -> dict:
+    req = urllib.request.Request(url, headers={"User-Agent": "jev-demo/llm_prices"})
+    with urllib.request.urlopen(req, timeout=60) as resp:  # noqa: S310 - fixed https host
+        return json.load(resp)
+
+
+def fetch_filter(flt: str, quiet: bool = False) -> list[dict]:
     url = f"{API}?{urllib.parse.urlencode({'api-version': '2023-01-01-preview', '$filter': flt})}"
     items: list[dict] = []
+    page = 0
     while url:
-        with urllib.request.urlopen(url, timeout=30) as resp:  # noqa: S310 - fixed https host
-            data = json.load(resp)
+        data = _get(url)
         items += data.get("Items", [])
         url = data.get("NextPageLink")
+        page += 1
+        if not quiet:
+            print(f"  {flt}: page {page}, {len(items)} items so far", end="\r", file=sys.stderr)
+    if not quiet:
+        print(file=sys.stderr)
     return items
+
+
+def norm(text: str) -> str:
+    return "".join(ch for ch in text.lower() if ch.isalnum())
+
+
+def matches(item: dict, model: str) -> bool:
+    m = norm(model)
+    return any(m in norm(item.get(k, "")) for k in ("meterName", "skuName", "productName"))
+
+
+def fetch(model: str, dump: str | None = None) -> list[dict]:
+    seen: set[str] = set()
+    items: list[dict] = []
+    for flt in FILTERS:
+        try:
+            for it in fetch_filter(flt):
+                key = it.get("meterId", "") + it.get("armRegionName", "") + str(it.get("retailPrice"))
+                if key not in seen:
+                    seen.add(key)
+                    items.append(it)
+        except Exception as error:  # noqa: BLE001
+            print(f"  filter {flt!r} failed: {error}", file=sys.stderr)
+        if any(matches(it, model) for it in items):
+            break  # found the model in this slice; no need to pull the rest
+    if dump:
+        with open(dump, "w", encoding="utf-8") as fh:
+            json.dump(items, fh, indent=1)
+        print(f"raw items written to {dump} ({len(items)})", file=sys.stderr)
+    return [it for it in items if matches(it, model)]
+
+
+def discover() -> None:
+    """Print the distinct service/product names that mention OpenAI or Foundry (first slices only)."""
+    names: dict[tuple[str, str], int] = {}
+    for flt in FILTERS[:3]:
+        try:
+            for it in fetch_filter(flt):
+                names[(it.get("serviceName", ""), it.get("productName", ""))] = names.get((it.get("serviceName", ""), it.get("productName", "")), 0) + 1
+        except Exception as error:  # noqa: BLE001
+            print(f"  filter {flt!r} failed: {error}", file=sys.stderr)
+    for (svc, prod), n in sorted(names.items()):
+        print(f"{n:6d}  serviceName={svc!r:40s} productName={prod!r}")
 
 
 def per_mtok(item: dict) -> float | None:
@@ -73,15 +136,21 @@ def main() -> int:
     parser.add_argument("--model", default="gpt-5-mini")
     parser.add_argument("--region", default="eastus", help="ARM region to show (prices for global meters are the same everywhere)")
     parser.add_argument("--all", action="store_true", help="show every region and meter type")
+    parser.add_argument("--discover", action="store_true", help="list service/product names that mention OpenAI or Foundry")
+    parser.add_argument("--dump", metavar="FILE", help="write all fetched raw items to a JSON file")
     args = parser.parse_args()
 
+    if args.discover:
+        discover()
+        return 0
     try:
-        items = fetch(args.model)
+        items = fetch(args.model, dump=args.dump)
     except Exception as error:  # noqa: BLE001
         print(f"Could not reach {API}: {error}", file=sys.stderr)
         return 1
     if not items:
-        print(f"No meters found containing '{args.model}'. Try a different spelling (e.g. 'gpt 5 mini').")
+        print(f"No meters matched '{args.model}'. Run with --discover to see the service/product names, "
+              "or --dump prices_raw.json and search that file.")
         return 1
 
     rows = []
