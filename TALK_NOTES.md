@@ -99,6 +99,7 @@ Wat dit betekent voor het verhaal:
 - **6× goedkoper, geen 444×.** Met een goedkoop, snel LLM en dezelfde korte prompts is de kostwinst bescheiden, ook omdat Jev per call meer input-tokens rapporteert (vragen en criteria tellen mee, andere tokenizer). De vendor-factor komt uit een zwaardere LLM-workflow. Zeg dat.
 - **Jev is niet deterministisch.** Drie identieke calls op T-109 verschilden tot 0.12 in kans. Jev geeft de verdeling, maar die verdeling wiebelt. Meet de spread altijd mee.
 - **Confidence ≠ topkans.** Jev gaf confidence 0.38 bij een topkans van 0.54: confidence meet hoe geconcentreerd de verdeling is, niet de kans op het gekozen label. Pas slide 5 zo aan als je dit wil benadrukken.
+- **Latency en kost van de Jev-gate hangen af van de context.** Tweede sessie (23 sept, later): 906 ms en ~1200 input-tokens per check (10 berichten gesprekshistorie incl. tool-outputs mee), tegenover 440–507 ms de dag ervoor en 320 ms / 470 tokens zonder historie in demo 4. Twee lessen: Jev-latency schommelt per sessie (early access, één regio), dus rapporteer een bereik; en hoeveel context de rechter ziet is een ontwerpkeuze (`GATE_CONTEXT_MESSAGES`). Het aandeel van de run (31% vs 67%) is stabieler dan de factor.
 - **Het sterkste cijfer** is demo 5: 20 LLM-samples reconstrueren grofweg wat Jev in één call geeft, voor ~110× de kost en ~80× de tijd, en het LLM meldt intussen 0.84 confidence terwijl het in een kwart van de gevallen anders antwoordt.
 
 ## Gebruikte versies (exact gepind in `pyproject.toml`)

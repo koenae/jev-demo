@@ -36,6 +36,14 @@ warnings.filterwarnings("ignore", category=LangChainBetaWarning)
 RECORDING = "demo3_agent_gate"
 THRESHOLD = 0.5
 
+
+def context_messages() -> int:
+    """How many recent messages the gate gets to see (env GATE_CONTEXT_MESSAGES, default 10).
+    More context = better-informed judge, but more tokens, latency and cost per check."""
+    import os
+
+    return int(os.environ.get("GATE_CONTEXT_MESSAGES", "10"))
+
 # --- Simulated tools: they only return canned text, nothing is executed -------------------
 
 
@@ -107,6 +115,7 @@ class GateDecision:
     blocked: bool
     reason: str
     latency_ms: float
+    input_tokens: int | None = None   # what the judge had to read for this one check
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -116,11 +125,12 @@ class GateDecision:
             "blocked": self.blocked,
             "reason": self.reason,
             "latency_ms": self.latency_ms,
+            "input_tokens": self.input_tokens,
         }
 
     @classmethod
     def from_dict(cls, d: dict[str, Any]) -> "GateDecision":
-        return cls(d["tool"], d["args"], d["probabilities"], d["blocked"], d["reason"], d["latency_ms"])
+        return cls(d["tool"], d["args"], d["probabilities"], d["blocked"], d["reason"], d["latency_ms"], d.get("input_tokens"))
 
 
 def gate_state(request: ToolCallRequest) -> dict[str, Any]:
@@ -129,7 +139,7 @@ def gate_state(request: ToolCallRequest) -> dict[str, Any]:
     return {
         "tool_call": {"name": call["name"], "args": call["args"]},
         "tool_description": request.tool.description if request.tool else "",
-        "recent_messages": request.state["messages"][-10:],
+        "recent_messages": request.state["messages"][-context_messages():],
     }
 
 
@@ -162,7 +172,7 @@ class JevToolGate(AgentMiddleware):
         p = {name: answer.noul for name, answer in response.nouls.items()}
         blocked, reason = decide(p, self.threshold)
         self.decisions.append(
-            GateDecision(call["name"], call["args"], p, blocked, reason, round(ms))
+            GateDecision(call["name"], call["args"], p, blocked, reason, round(ms), response.usage.input_tokens)
         )
         if blocked:
             return blocked_message(call, reason)  # LLM sees an error ToolMessage
@@ -189,7 +199,7 @@ class LLMToolGate(AgentMiddleware):
         self.output_tokens += tout or 0
         p = {name: (1.0 if value else 0.0) for name, value in answer.items()}  # booleans, no probabilities
         blocked, reason = decide(p, self.threshold)
-        self.decisions.append(GateDecision(call["name"], call["args"], p, blocked, reason, round(ms)))
+        self.decisions.append(GateDecision(call["name"], call["args"], p, blocked, reason, round(ms), tin))
         if blocked:
             return blocked_message(call, reason)
         return handler(request)
@@ -416,6 +426,7 @@ class GateRow:
     blocked: float                 # median
     gate_ms: float                 # median sum of gate latencies per run
     gate_ms_per_call: float | None  # median gate latency per judged tool call
+    tokens_per_call: float | None   # median input tokens per judged tool call (what the judge read)
     gate_share: float              # gate_ms / total_ms
     agent_cost_usd: float | None   # medians of cost
     gate_cost_usd: float | None
@@ -444,6 +455,7 @@ def compare(c: GateComparison) -> list[GateRow]:
             continue
         gate_ms = [sum(d.latency_ms for d in r.decisions) for r in rs]
         per_call = [d.latency_ms for r in rs for d in r.decisions]
+        toks = [d.input_tokens for r in rs for d in r.decisions if d.input_tokens is not None]
         agent_costs = [cost_usd("llm", r.agent_input_tokens, r.agent_output_tokens, c.llm_usd_per_mtok) for r in rs]
         gate_costs = [0.0 if kind == "none" else cost_usd(kind, r.gate_input_tokens, r.gate_output_tokens, c.llm_usd_per_mtok) for r in rs]
         totals = [None if a is None or g is None else a + g for a, g in zip(agent_costs, gate_costs)]
@@ -460,6 +472,7 @@ def compare(c: GateComparison) -> list[GateRow]:
             blocked=median(len(r.blocked) for r in rs),
             gate_ms=round(g_ms, 1),
             gate_ms_per_call=round(median(per_call), 1) if per_call else None,
+            tokens_per_call=round(median(toks)) if toks else None,
             gate_share=(g_ms / total_ms) if total_ms else 0.0,
             agent_cost_usd=_median(agent_costs),
             gate_cost_usd=_median(gate_costs),

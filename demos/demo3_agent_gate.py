@@ -33,13 +33,14 @@ def main_compare(mode: str, runs: int) -> None:
     console.print(origin_badge(result.origin))
     rows = compare(result)
     table = Table(title=f"none vs LLM gate vs Jev gate (medians over {rows[0].runs if rows else 0} run(s) each)")
-    for col in ("gate", "gate / call", "gate time", "share of run", "agent run", "agent w/o gate", "tool calls", "blocked", "agent cost", "gate cost", "total cost"):
+    for col in ("gate", "gate / call", "tokens / call", "gate time", "share of run", "agent run", "agent w/o gate", "tool calls", "blocked", "agent cost", "gate cost", "total cost"):
         table.add_column(col, justify="left" if col == "gate" else "right")
     for row in rows:
         style = "green" if row.gate == "jev" else ""
         table.add_row(
             f"[{style}]{row.gate}[/{style}]" if style else row.gate,
             "-" if row.gate_ms_per_call is None else f"{row.gate_ms_per_call:.0f} ms",
+            "-" if row.tokens_per_call is None else f"{row.tokens_per_call:.0f}",
             f"{row.gate_ms / 1000:.1f} s", f"{row.gate_share:.0%}",
             f"{row.total_ms / 1000:.1f} s", f"{row.agent_ms / 1000:.1f} s",
             f"{row.tool_calls:g}", f"{row.blocked:g}",
@@ -51,7 +52,8 @@ def main_compare(mode: str, runs: int) -> None:
         console.print(
             f"Per judged tool call: LLM gate {by['llm'].gate_ms_per_call:.0f} ms vs Jev gate {by['jev'].gate_ms_per_call:.0f} ms "
             f"-> [green]{by['llm'].gate_ms_per_call / by['jev'].gate_ms_per_call:.1f}x[/green]. "
-            "The 'agent run' totals include the agent's own LLM turns, which differ per run (different paths, reasoning time)."
+            "The 'agent run' totals include the agent's own LLM turns, which differ per run (different paths, reasoning time). "
+            "Tokens per check grow with the conversation the judge gets to see (GATE_CONTEXT_MESSAGES, default 10)."
         )
         proj = Table(title="Projection for 10 000 judged tool calls (linear, not measured)")
         proj.add_column("gate"); proj.add_column("judge time", justify="right"); proj.add_column("judge cost", justify="right")
@@ -85,6 +87,7 @@ def main(mode: str, gate: str = "jev") -> None:
     table.add_column("production", justify="right")
     table.add_column("secrets", justify="right")
     table.add_column("ms", justify="right")
+    table.add_column("tokens", justify="right")
     table.add_column("Decision")
     for i, d in enumerate(result.decisions, 1):
         args = ", ".join(f"{k}={str(v)[:38] + ('…' if len(str(v)) > 38 else '')!r}" for k, v in d.args.items())
@@ -97,6 +100,7 @@ def main(mode: str, gate: str = "jev") -> None:
             f"{p['production']:.2f} {bar(p['production'], 8)}",
             f"{p['secrets']:.2f} {bar(p['secrets'], 8)}",
             f"{d.latency_ms:.0f}",
+            "-" if d.input_tokens is None else str(d.input_tokens),
             verdict,
         )
     console.print(table)
