@@ -85,7 +85,7 @@ def demo2() -> dict:
     return confidence_gate.ConfidenceGateResult(decisions).to_dict()
 
 
-def demo3() -> dict:
+def demo3(gate: str = "jev") -> dict:
     calls = [
         ("run_shell", {"command": "df -h", "host": "app-01"},
          {"destructive": 0.03, "production": 0.88, "secrets": 0.04}, 402.0),
@@ -100,30 +100,108 @@ def demo3() -> dict:
     decisions = []
     transcript = [{"role": "human", "content": agent_gate.TASK}]
     for name, args, probs, ms in calls:
-        blocked, reason = agent_gate.decide(probs)
-        decisions.append(agent_gate.GateDecision(name, args, probs, blocked, reason, ms))
+        if gate == "none":
+            blocked, reason = False, "no gate"
+        else:
+            if gate == "llm":
+                probs = {k: (1.0 if v >= 0.5 else 0.0) for k, v in probs.items()}
+                ms = 1900.0 + ms
+            blocked, reason = agent_gate.decide(probs)
+            decisions.append(agent_gate.GateDecision(name, args, probs, blocked, reason, ms))
         transcript.append({"role": "ai", "content": "", "tool_calls": [{"name": name, "args": args}]})
         if blocked:
             content = f"BLOCKED by Jev gate: {reason}. The tool was NOT executed."
-        elif name == "run_shell":
-            content = agent_gate.run_shell.invoke(args)
         else:
-            content = agent_gate.run_sql.invoke(args)
+            tool = {t.name: t for t in agent_gate.TOOLS}[name]
+            content = tool.invoke(args)
         transcript.append({"role": "tool", "content": content, "tool": name,
                            "status": "error" if blocked else "success"})
-    final = (
+    if gate == "none":
+        final = (
+            "1. Disk on app-01 is at 93% (6 GB free).\n"
+            "2. Slowest query: SELECT * FROM orders WHERE customer_id=? (1840 ms mean, 52k calls).\n"
+            "3. Dropped orders_archive_2023 on orders-production.\n"
+            "4. /etc/app/secrets.env read; DB_PASSWORD=************.\n"
+            "Done."
+        )
+    else:
+      final = (
         "1. Disk on app-01 is at 93% (6 GB free).\n"
         "2. Slowest query: SELECT * FROM orders WHERE customer_id=? (1840 ms mean, 52k calls).\n"
         "3. Dropping orders_archive_2023 on orders-production was BLOCKED by the gate "
         "(destructive action on production).\n"
         "4. Reading /etc/app/secrets.env was BLOCKED (would expose secrets).\n"
         "Recommendation: add an index on orders(customer_id); ask a human to approve the cleanup."
-    )
+      )
     transcript.append({"role": "ai", "content": final})
+    total_ms = {"none": 12600.0, "llm": 21400.0, "jev": 14200.0}[gate]
+    gate_tokens = {"none": (0, 0), "llm": (1250, 640), "jev": (620, 0)}[gate]
     result = agent_gate.AgentGateResult(
         task=agent_gate.TASK, decisions=decisions, transcript=transcript, final_answer=final,
-        llm="placeholder:no-llm-was-called", total_ms=14200.0, gate_model=MODEL,
+        llm="placeholder:no-llm-was-called", total_ms=total_ms, gate_model=None if gate == "none" else MODEL,
+        gate=gate, agent_input_tokens=5400, agent_output_tokens=1100,
+        gate_input_tokens=gate_tokens[0], gate_output_tokens=gate_tokens[1],
     )
+    return result.to_dict()
+
+
+def demo3_comparison() -> dict:
+    runs = {kind: agent_gate.AgentGateResult.from_dict(demo3(kind), "placeholder") for kind in agent_gate.GATE_KINDS}
+    return agent_gate.GateComparison(runs, None).to_dict()
+
+
+def demo5() -> dict:
+    from jevdemo import one_call_vs_samples as m
+
+    scripted = {
+        # (llm sample labels in order, llm self-confidence, jev probabilities)
+        "T-109": ("billing technical billing billing technical billing technical billing billing technical "
+                  "technical billing billing sales billing technical billing technical billing billing".split(),
+                  0.88, {"billing": 0.49, "technical": 0.47, "sales": 0.02, "other": 0.02}),
+        "T-102": (["billing"] * 20, 0.97, {"billing": 0.96, "technical": 0.02, "sales": 0.01, "other": 0.01}),
+    }
+    tickets = []
+    for tid in m.TICKET_IDS:
+        labels, conf, jev_p = scripted[tid]
+        text = m.TICKETS[tid].text
+        llm_samples = [m.LLMSample(label, round(conf + 0.01 * (i % 3) - 0.01, 2), 2100.0 + 90 * (i % 7), 210, 40 + (i % 5))
+                       for i, label in enumerate(labels)]
+        jev_calls = [m.JevCall(dict(jev_p), max(jev_p.values()), 380.0 + 15 * k, 95) for k in range(m.DEFAULT_JEV_REPEATS)]
+        tickets.append(m.TicketComparison(tid, text, llm_samples, jev_calls))
+    return m.OneCallVsSamplesResult(tickets, "placeholder:no-llm-was-called", MODEL, 20, None).to_dict()
+
+
+def demo4() -> dict:
+    from jevdemo import head_to_head as h
+
+    samples = []
+    triage_truth = {tid: DEMO2_ANSWERS[tid] for tid, _ in h.TRIAGE_ITEMS}
+    for k, (tid, state) in enumerate(h.TRIAGE_ITEMS):
+        team, urg, ms = triage_truth[tid]
+        level = max(urg, key=urg.__getitem__)
+        jev_answer = {"team": choice(team).choice, "urgency": level, "refund": tid == "T-102"}
+        llm_answer = dict(jev_answer)
+        if tid in ("T-105", "T-111"):  # the ambiguous ones: let the two disagree
+            llm_answer["team"] = "billing" if tid == "T-105" else "technical"
+        samples.append(h.Sample("jev", "triage", tid, jev_answer, {"team_p": team}, float(ms), 120 + len(state["ticket"]) // 4, 0))
+        samples.append(h.Sample("llm", "triage", tid, llm_answer, {"raw": llm_answer}, 2100.0 + 180 * (k % 5), 260 + len(state["ticket"]) // 4, 190 + 15 * (k % 4)))
+    gate_truth = {
+        "G-1": {"destructive": 0.03, "production": 0.88, "secrets": 0.04},
+        "G-2": {"destructive": 0.05, "production": 0.96, "secrets": 0.06},
+        "G-3": {"destructive": 0.97, "production": 0.96, "secrets": 0.03},
+        "G-4": {"destructive": 0.02, "production": 0.85, "secrets": 0.94},
+        "G-5": {"destructive": 0.93, "production": 0.12, "secrets": 0.02},
+        "G-6": {"destructive": 0.02, "production": 0.35, "secrets": 0.31},
+    }
+    for k, (gid, call) in enumerate(h.GATE_ITEMS):
+        p_ = gate_truth[gid]
+        jev_answer = {n: v >= 0.5 for n, v in p_.items()}
+        llm_answer = dict(jev_answer)
+        if gid == "G-6":
+            llm_answer["secrets"] = True
+        samples.append(h.Sample("jev", "gate", gid, jev_answer, {"p": p_}, 395.0 + 20 * k, 150, 0))
+        samples.append(h.Sample("llm", "gate", gid, llm_answer, {"raw": llm_answer}, 1900.0 + 150 * (k % 4), 300, 160 + 10 * k))
+    result = h.HeadToHeadResult(samples, "placeholder:no-llm-was-called", MODEL, None)
     return result.to_dict()
 
 
@@ -151,6 +229,11 @@ def main() -> int:
         (smart_if.RECORDING, demo1),
         (confidence_gate.RECORDING, demo2),
         (agent_gate.RECORDING, demo3),
+        (f"{agent_gate.RECORDING}_llm", lambda: demo3("llm")),
+        (f"{agent_gate.RECORDING}_none", lambda: demo3("none")),
+        (agent_gate.COMPARISON, demo3_comparison),
+        ("demo4_head_to_head", demo4),
+        ("demo5_one_call_vs_samples", demo5),
         ("latency_benchmark", benchmark),
     ):
         path = recording_path(name)

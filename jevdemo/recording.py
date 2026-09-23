@@ -45,8 +45,8 @@ def load_recording(name: str) -> dict[str, Any]:
     if not path.exists():
         raise RecordingMissingError(
             f"No recording found at {path.relative_to(RECORDINGS_DIR.parent)}.",
-            hint=f"Run the demo once with --record while online, e.g. "
-            f"`uv run python demos/{name}.py --record`.",
+            hint="Run the matching demo once with --record while online "
+            "(see README: 'Offline-modus gebruiken').",
         )
     return json.loads(path.read_text(encoding="utf-8"))
 

@@ -1,0 +1,716 @@
+{
+  "demo": "demo4_head_to_head",
+  "source": "synthetic-placeholder",
+  "recorded_at": "2026-09-22T19:23:42+00:00",
+  "versions": {
+    "typesafe-sdk": "0.7.0",
+    "langchain": "1.4.2",
+    "langchain-core": "1.6.3",
+    "langchain-typesafe": "0.0.1a3",
+    "langchain-openai": "1.6.2",
+    "langchain-anthropic": "1.7.2",
+    "langgraph": "1.2.11",
+    "marimo": "0.24.2",
+    "rich": "15.0.0",
+    "python-dotenv": "1.2.3"
+  },
+  "data": {
+    "samples": [
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-101",
+        "answer": {
+          "team": "technical",
+          "urgency": 2,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "technical": 0.95,
+            "billing": 0.02,
+            "sales": 0.01,
+            "other": 0.02
+          }
+        },
+        "latency_ms": 388.0,
+        "input_tokens": 139,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-101",
+        "answer": {
+          "team": "technical",
+          "urgency": 2,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "technical",
+            "urgency": 2,
+            "refund": false
+          }
+        },
+        "latency_ms": 2100.0,
+        "input_tokens": 279,
+        "output_tokens": 190
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-102",
+        "answer": {
+          "team": "billing",
+          "urgency": 1,
+          "refund": true
+        },
+        "detail": {
+          "team_p": {
+            "billing": 0.96,
+            "technical": 0.02,
+            "sales": 0.01,
+            "other": 0.01
+          }
+        },
+        "latency_ms": 401.0,
+        "input_tokens": 136,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-102",
+        "answer": {
+          "team": "billing",
+          "urgency": 1,
+          "refund": true
+        },
+        "detail": {
+          "raw": {
+            "team": "billing",
+            "urgency": 1,
+            "refund": true
+          }
+        },
+        "latency_ms": 2280.0,
+        "input_tokens": 276,
+        "output_tokens": 205
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-103",
+        "answer": {
+          "team": "sales",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "sales": 0.91,
+            "billing": 0.07,
+            "technical": 0.01,
+            "other": 0.01
+          }
+        },
+        "latency_ms": 372.0,
+        "input_tokens": 136,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-103",
+        "answer": {
+          "team": "sales",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "sales",
+            "urgency": 0,
+            "refund": false
+          }
+        },
+        "latency_ms": 2460.0,
+        "input_tokens": 276,
+        "output_tokens": 220
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-104",
+        "answer": {
+          "team": "billing",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "billing": 0.66,
+            "other": 0.21,
+            "technical": 0.12,
+            "sales": 0.01
+          }
+        },
+        "latency_ms": 395.0,
+        "input_tokens": 136,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-104",
+        "answer": {
+          "team": "billing",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "billing",
+            "urgency": 0,
+            "refund": false
+          }
+        },
+        "latency_ms": 2640.0,
+        "input_tokens": 276,
+        "output_tokens": 235
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-105",
+        "answer": {
+          "team": "technical",
+          "urgency": 2,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "technical": 0.52,
+            "billing": 0.45,
+            "sales": 0.01,
+            "other": 0.02
+          }
+        },
+        "latency_ms": 431.0,
+        "input_tokens": 147,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-105",
+        "answer": {
+          "team": "billing",
+          "urgency": 2,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "billing",
+            "urgency": 2,
+            "refund": false
+          }
+        },
+        "latency_ms": 2820.0,
+        "input_tokens": 287,
+        "output_tokens": 190
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-106",
+        "answer": {
+          "team": "sales",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "sales": 0.62,
+            "technical": 0.33,
+            "billing": 0.03,
+            "other": 0.02
+          }
+        },
+        "latency_ms": 379.0,
+        "input_tokens": 137,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-106",
+        "answer": {
+          "team": "sales",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "sales",
+            "urgency": 0,
+            "refund": false
+          }
+        },
+        "latency_ms": 2100.0,
+        "input_tokens": 277,
+        "output_tokens": 205
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-107",
+        "answer": {
+          "team": "technical",
+          "urgency": 2,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "technical": 0.9,
+            "other": 0.05,
+            "billing": 0.03,
+            "sales": 0.02
+          }
+        },
+        "latency_ms": 366.0,
+        "input_tokens": 139,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-107",
+        "answer": {
+          "team": "technical",
+          "urgency": 2,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "technical",
+            "urgency": 2,
+            "refund": false
+          }
+        },
+        "latency_ms": 2280.0,
+        "input_tokens": 279,
+        "output_tokens": 220
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-108",
+        "answer": {
+          "team": "other",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "other": 0.94,
+            "technical": 0.02,
+            "billing": 0.02,
+            "sales": 0.02
+          }
+        },
+        "latency_ms": 351.0,
+        "input_tokens": 134,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-108",
+        "answer": {
+          "team": "other",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "other",
+            "urgency": 0,
+            "refund": false
+          }
+        },
+        "latency_ms": 2460.0,
+        "input_tokens": 274,
+        "output_tokens": 235
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-109",
+        "answer": {
+          "team": "billing",
+          "urgency": 1,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "billing": 0.49,
+            "technical": 0.47,
+            "sales": 0.02,
+            "other": 0.02
+          }
+        },
+        "latency_ms": 447.0,
+        "input_tokens": 150,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-109",
+        "answer": {
+          "team": "billing",
+          "urgency": 1,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "billing",
+            "urgency": 1,
+            "refund": false
+          }
+        },
+        "latency_ms": 2640.0,
+        "input_tokens": 290,
+        "output_tokens": 190
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-110",
+        "answer": {
+          "team": "sales",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "sales": 0.84,
+            "billing": 0.1,
+            "technical": 0.04,
+            "other": 0.02
+          }
+        },
+        "latency_ms": 402.0,
+        "input_tokens": 146,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-110",
+        "answer": {
+          "team": "sales",
+          "urgency": 0,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "sales",
+            "urgency": 0,
+            "refund": false
+          }
+        },
+        "latency_ms": 2820.0,
+        "input_tokens": 286,
+        "output_tokens": 205
+      },
+      {
+        "system": "jev",
+        "task": "triage",
+        "item_id": "T-111",
+        "answer": {
+          "team": "other",
+          "urgency": 1,
+          "refund": false
+        },
+        "detail": {
+          "team_p": {
+            "other": 0.41,
+            "technical": 0.3,
+            "billing": 0.19,
+            "sales": 0.1
+          }
+        },
+        "latency_ms": 344.0,
+        "input_tokens": 125,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "triage",
+        "item_id": "T-111",
+        "answer": {
+          "team": "technical",
+          "urgency": 1,
+          "refund": false
+        },
+        "detail": {
+          "raw": {
+            "team": "technical",
+            "urgency": 1,
+            "refund": false
+          }
+        },
+        "latency_ms": 2100.0,
+        "input_tokens": 265,
+        "output_tokens": 220
+      },
+      {
+        "system": "jev",
+        "task": "gate",
+        "item_id": "G-1",
+        "answer": {
+          "destructive": false,
+          "production": true,
+          "secrets": false
+        },
+        "detail": {
+          "p": {
+            "destructive": 0.03,
+            "production": 0.88,
+            "secrets": 0.04
+          }
+        },
+        "latency_ms": 395.0,
+        "input_tokens": 150,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "gate",
+        "item_id": "G-1",
+        "answer": {
+          "destructive": false,
+          "production": true,
+          "secrets": false
+        },
+        "detail": {
+          "raw": {
+            "destructive": false,
+            "production": true,
+            "secrets": false
+          }
+        },
+        "latency_ms": 1900.0,
+        "input_tokens": 300,
+        "output_tokens": 160
+      },
+      {
+        "system": "jev",
+        "task": "gate",
+        "item_id": "G-2",
+        "answer": {
+          "destructive": false,
+          "production": true,
+          "secrets": false
+        },
+        "detail": {
+          "p": {
+            "destructive": 0.05,
+            "production": 0.96,
+            "secrets": 0.06
+          }
+        },
+        "latency_ms": 415.0,
+        "input_tokens": 150,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "gate",
+        "item_id": "G-2",
+        "answer": {
+          "destructive": false,
+          "production": true,
+          "secrets": false
+        },
+        "detail": {
+          "raw": {
+            "destructive": false,
+            "production": true,
+            "secrets": false
+          }
+        },
+        "latency_ms": 2050.0,
+        "input_tokens": 300,
+        "output_tokens": 170
+      },
+      {
+        "system": "jev",
+        "task": "gate",
+        "item_id": "G-3",
+        "answer": {
+          "destructive": true,
+          "production": true,
+          "secrets": false
+        },
+        "detail": {
+          "p": {
+            "destructive": 0.97,
+            "production": 0.96,
+            "secrets": 0.03
+          }
+        },
+        "latency_ms": 435.0,
+        "input_tokens": 150,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "gate",
+        "item_id": "G-3",
+        "answer": {
+          "destructive": true,
+          "production": true,
+          "secrets": false
+        },
+        "detail": {
+          "raw": {
+            "destructive": true,
+            "production": true,
+            "secrets": false
+          }
+        },
+        "latency_ms": 2200.0,
+        "input_tokens": 300,
+        "output_tokens": 180
+      },
+      {
+        "system": "jev",
+        "task": "gate",
+        "item_id": "G-4",
+        "answer": {
+          "destructive": false,
+          "production": true,
+          "secrets": true
+        },
+        "detail": {
+          "p": {
+            "destructive": 0.02,
+            "production": 0.85,
+            "secrets": 0.94
+          }
+        },
+        "latency_ms": 455.0,
+        "input_tokens": 150,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "gate",
+        "item_id": "G-4",
+        "answer": {
+          "destructive": false,
+          "production": true,
+          "secrets": true
+        },
+        "detail": {
+          "raw": {
+            "destructive": false,
+            "production": true,
+            "secrets": true
+          }
+        },
+        "latency_ms": 2350.0,
+        "input_tokens": 300,
+        "output_tokens": 190
+      },
+      {
+        "system": "jev",
+        "task": "gate",
+        "item_id": "G-5",
+        "answer": {
+          "destructive": true,
+          "production": false,
+          "secrets": false
+        },
+        "detail": {
+          "p": {
+            "destructive": 0.93,
+            "production": 0.12,
+            "secrets": 0.02
+          }
+        },
+        "latency_ms": 475.0,
+        "input_tokens": 150,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "gate",
+        "item_id": "G-5",
+        "answer": {
+          "destructive": true,
+          "production": false,
+          "secrets": false
+        },
+        "detail": {
+          "raw": {
+            "destructive": true,
+            "production": false,
+            "secrets": false
+          }
+        },
+        "latency_ms": 1900.0,
+        "input_tokens": 300,
+        "output_tokens": 200
+      },
+      {
+        "system": "jev",
+        "task": "gate",
+        "item_id": "G-6",
+        "answer": {
+          "destructive": false,
+          "production": false,
+          "secrets": false
+        },
+        "detail": {
+          "p": {
+            "destructive": 0.02,
+            "production": 0.35,
+            "secrets": 0.31
+          }
+        },
+        "latency_ms": 495.0,
+        "input_tokens": 150,
+        "output_tokens": 0
+      },
+      {
+        "system": "llm",
+        "task": "gate",
+        "item_id": "G-6",
+        "answer": {
+          "destructive": false,
+          "production": false,
+          "secrets": true
+        },
+        "detail": {
+          "raw": {
+            "destructive": false,
+            "production": false,
+            "secrets": true
+          }
+        },
+        "latency_ms": 2050.0,
+        "input_tokens": 300,
+        "output_tokens": 210
+      }
+    ],
+    "llm": "placeholder:no-llm-was-called",
+    "jev_model": "jev-placeholder (synthetic, not a real model answer)",
+    "llm_usd_per_mtok": null,
+    "workers": 4
+  }
+}

@@ -1,7 +1,12 @@
 {
   "demo": "demo1_smart_if",
+<<<<<<< HEAD
   "source": "live",
   "recorded_at": "2026-09-21T20:41:57+00:00",
+=======
+  "source": "synthetic-placeholder",
+  "recorded_at": "2026-09-22T19:23:42+00:00",
+>>>>>>> 4cb5fd96e3d8af39eb7c0699a3c1d229f366e7fa
   "versions": {
     "typesafe-sdk": "0.7.0",
     "langchain": "1.4.2",

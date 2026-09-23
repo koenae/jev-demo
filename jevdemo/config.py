@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from functools import cache
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from dotenv import load_dotenv
 
@@ -113,9 +113,12 @@ def build_chat_model(settings: LLMSettings | None = None):
             api_version=settings.azure_api_version,
             api_key=settings.api_key,
         )
-    kwargs = {"api_key": settings.api_key}
+    kwargs: dict[str, Any] = {"api_key": settings.api_key}
     if settings.base_url:
         kwargs["base_url"] = settings.base_url
+    effort = os.environ.get("LLM_REASONING_EFFORT", "").strip()
+    if effort and settings.provider == "openai":
+        kwargs["reasoning_effort"] = effort  # e.g. minimal: fairest speed comparison for gpt-5-*
     return init_chat_model(settings.model, model_provider=settings.provider, **kwargs)
 
 
