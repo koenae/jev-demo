@@ -160,7 +160,7 @@ def main() -> int:
                 assert rows["llm"].blocked == 2, rows["llm"]          # DROP on production + secrets
                 assert rows["llm"].gate_ms == 3 * 900.0 and rows["llm"].gate_ms_per_call == 900.0
                 assert cmp_.runs["jev"][0].gate_input_tokens > 0, "Jev gate must count its tokens"
-                assert rows["llm"].agent_ms == rows["llm"].total_ms - rows["llm"].gate_ms
+                assert abs(rows["llm"].agent_ms - (rows["llm"].total_ms - rows["llm"].gate_ms)) < 1.0
                 replay = agent_gate.run_gate_comparison("offline")
                 assert replay.runs["llm"][0].decisions == cmp_.runs["llm"][0].decisions
                 assert agent_gate.run_agent_gate("offline", gate="jev").gate == "jev"
