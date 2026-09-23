@@ -417,25 +417,28 @@ def slide_09b_gate_comparison(agent_gate, badge, error_view, md, mode, rerun, sl
         _fmt = lambda v: "n/a" if v is None else f"${v:.6f}"  # noqa: E731
         _labels = {"none": "geen gate", "llm": "LLM als rechter", "jev": "Jev als rechter"}
         _table_rows = [[
-            _labels[r.gate], f"{r.total_ms / 1000:.1f} s", r.tool_calls, r.blocked,
-            f"{r.gate_ms / 1000:.1f} s", _fmt(r.agent_cost_usd), _fmt(r.gate_cost_usd), _fmt(r.total_cost_usd),
+            _labels[r.gate],
+            "–" if r.gate_ms_per_call is None else f"{r.gate_ms_per_call:.0f} ms",
+            f"{r.gate_ms / 1000:.1f} s", f"{r.gate_share:.0%}",
+            f"{r.total_ms / 1000:.1f} s", f"{r.agent_ms / 1000:.1f} s",
+            f"{r.tool_calls:g}", f"{r.blocked:g}", _fmt(r.gate_cost_usd),
         ] for r in _rows_]
-        _base = _by["none"].total_ms if "none" in _by else None
         _stats = ""
         for _k in ("llm", "jev"):
-            if _k in _by and _base:
-                _extra = _by[_k].total_ms - _base
-                _stats += stat(f"+{_extra / 1000:.1f} s", f"{_labels[_k]}: extra tijd per run")
-        if "llm" in _by and "jev" in _by and _by["jev"].gate_ms:
-            _stats += stat(f"{_by['llm'].gate_ms / _by['jev'].gate_ms:.1f}×", "gate-tijd LLM / Jev")
+            if _k in _by and _by[_k].gate_ms_per_call:
+                _stats += stat(f"{_by[_k].gate_ms_per_call / 1000:.1f} s", f"{_labels[_k]}: per tool call")
+        if "llm" in _by and "jev" in _by and _by["jev"].gate_ms_per_call:
+            _stats += stat(f"{_by['llm'].gate_ms_per_call / _by['jev'].gate_ms_per_call:.1f}×", "gate-tijd per call, LLM / Jev")
+        _n_runs = _rows_[0].runs if _rows_ else 0
         _out = slide(
             "Dezelfde agent, drie poortwachters",
             badge(r3c.origin),
             f'<div class="jev-cols-3">{_stats}</div>',
-            table(["gate", "agent-run", "tool calls", "geblokkeerd", "gate-tijd", "kost agent", "kost gate", "totaal"], _table_rows, cls="compact"),
+            table(["gate", "gate / call", "gate-tijd", "aandeel run", "agent-run", "agent zonder gate", "tool calls", "geblokkeerd", "kost gate"], _table_rows, cls="compact"),
             md(
-                "Zelfde taak, zelfde drie vragen, zelfde beleid. De LLM-rechter voegt per tool call een volledige "
-                "LLM-rondreis toe; Jev een halve seconde en een handvol tokens. "
+                f"Medianen over {_n_runs} run(s) per gate. Zelfde taak, zelfde drie vragen, zelfde beleid. "
+                "De agent-run zelf schommelt met seconden per run (ander pad, andere redeneertijd), dus kijk naar de gate-kolommen: "
+                "de LLM-rechter kost per tool call een volledige LLM-rondreis, Jev een halve seconde. "
                 "**Daarom** zet je met een LLM de check niet op elke stap, en met Jev wel."
             ),
         )

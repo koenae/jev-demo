@@ -146,7 +146,7 @@ def demo3(gate: str = "jev") -> dict:
 
 
 def demo3_comparison() -> dict:
-    runs = {kind: agent_gate.AgentGateResult.from_dict(demo3(kind), "placeholder") for kind in agent_gate.GATE_KINDS}
+    runs = {kind: [agent_gate.AgentGateResult.from_dict(demo3(kind), "placeholder")] for kind in agent_gate.GATE_KINDS}
     return agent_gate.GateComparison(runs, None).to_dict()
 
 

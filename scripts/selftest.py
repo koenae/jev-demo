@@ -153,14 +153,15 @@ def main() -> int:
                 mock.patch.object(agent_gate, "TypeSafeClassifier",
                                   lambda **kw: TypeSafeClassifier(api_key="fake", client=httpx2.Client(transport=fake_transport(2)))),
             ):
-                cmp_ = agent_gate.run_gate_comparison("record")
+                cmp_ = agent_gate.run_gate_comparison("record", runs=2)
                 rows = {r.gate: r for r in agent_gate.compare(cmp_)}
-                assert set(rows) == {"none", "llm", "jev"}
+                assert set(rows) == {"none", "llm", "jev"} and rows["jev"].runs == 2
                 assert rows["none"].blocked == 0 and rows["none"].tool_calls == 3
                 assert rows["llm"].blocked == 2, rows["llm"]          # DROP on production + secrets
-                assert rows["llm"].gate_ms == 3 * 900.0
+                assert rows["llm"].gate_ms == 3 * 900.0 and rows["llm"].gate_ms_per_call == 900.0
+                assert rows["llm"].agent_ms == rows["llm"].total_ms - rows["llm"].gate_ms
                 replay = agent_gate.run_gate_comparison("offline")
-                assert replay.runs["llm"].decisions == cmp_.runs["llm"].decisions
+                assert replay.runs["llm"][0].decisions == cmp_.runs["llm"][0].decisions
                 assert agent_gate.run_agent_gate("offline", gate="jev").gate == "jev"
                 print(f"gate comparison ok  llm gate blocked {rows['llm'].blocked}/3, jev gate blocked {rows['jev'].blocked}/3 (random fake)")
     print("selftest passed")

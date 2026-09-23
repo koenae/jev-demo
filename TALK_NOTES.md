@@ -47,6 +47,7 @@
 
 ### Demo 3b · Gate-vergelijking (`demos/demo3_agent_gate.py --compare`)
 - **Wat het publiek moet zien:** drie rijen: geen gate, LLM-gate, Jev-gate; wandtijd van de hele agent-run, gate-tijd apart, kost agent en kost gate. De LLM-gate gebruikt `LLMToolGate`: dezelfde drie vragen via structured output en hetzelfde `decide()`, maar met booleans in plaats van kansen (een LLM geeft geen verdeling).
+- **Lees de tabel goed:** de totale agent-run wordt gedomineerd door de eigen LLM-turns van de agent, en die variëren tussen runs met 10–15 s (ander pad, andere redeneertijd, soms een tool call meer of minder). Eén run per gate zegt dus niets over het totaal; een eerste echte meting gaf zelfs Jev-run 58 s tegenover LLM-run 58 s, terwijl de gate-tijd 3.3 s tegenover 18.9 s was. Gebruik `--runs 3` (medianen), kijk naar "gate / call" en "aandeel run", en zet `LLM_REASONING_EFFORT=minimal` zodat de agent-ruis kleiner wordt.
 - **Als live faalt:** drie agent-runs zijn traag (30–90 s) en het LLM kan per run andere tool calls kiezen; toon dit offline. Live is alleen zinvol als je tijd over hebt.
 
 ### Demo 5 · Eén call vs N samples (`jevdemo/one_call_vs_samples.py`)

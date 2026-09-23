@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass, field
+from statistics import median
 from time import perf_counter
 from typing import Any, Callable, Literal
 
@@ -377,36 +378,49 @@ GATE_KINDS: tuple[GateKind, ...] = ("none", "llm", "jev")
 
 @dataclass(frozen=True)
 class GateComparison:
-    runs: dict[str, AgentGateResult]     # keyed by gate kind
+    runs: dict[str, list[AgentGateResult]]     # keyed by gate kind; one or more runs each
     llm_usd_per_mtok: tuple[float, float] | None
     origin: str = "live"
 
     def to_dict(self) -> dict[str, Any]:
         return {
-            "runs": {k: r.to_dict() for k, r in self.runs.items()},
+            "runs": {k: [r.to_dict() for r in rs] for k, rs in self.runs.items()},
             "llm_usd_per_mtok": list(self.llm_usd_per_mtok) if self.llm_usd_per_mtok else None,
         }
 
     @classmethod
     def from_dict(cls, d: dict[str, Any], origin: str) -> "GateComparison":
         prices = d.get("llm_usd_per_mtok")
-        return cls(
-            {k: AgentGateResult.from_dict(r, origin) for k, r in d["runs"].items()},
-            (prices[0], prices[1]) if prices else None,
-            origin,
-        )
+        runs: dict[str, list[AgentGateResult]] = {}
+        for k, v in d["runs"].items():
+            items = v if isinstance(v, list) else [v]  # older recordings stored a single run
+            runs[k] = [AgentGateResult.from_dict(r, origin) for r in items]
+        return cls(runs, (prices[0], prices[1]) if prices else None, origin)
 
 
 @dataclass(frozen=True)
 class GateRow:
+    """Medians over the runs of one gate kind. The agent's own LLM turns vary a lot between
+    runs (different paths, reasoning time), so `gate_ms_per_call` and `gate_share` are the
+    numbers the gate itself controls; `total_ms` is dominated by the agent."""
+
     gate: str
-    total_ms: float
-    tool_calls: int
-    blocked: int
-    gate_ms: float                 # sum of gate latencies
-    agent_cost_usd: float | None
+    runs: int
+    total_ms: float                # median wall time of the whole agent run
+    agent_ms: float                # median of (total - gate time): the agent's own turns
+    tool_calls: float              # median
+    blocked: float                 # median
+    gate_ms: float                 # median sum of gate latencies per run
+    gate_ms_per_call: float | None  # median gate latency per judged tool call
+    gate_share: float              # gate_ms / total_ms
+    agent_cost_usd: float | None   # medians of cost
     gate_cost_usd: float | None
     total_cost_usd: float | None
+
+
+def _median(values: list[float | None]) -> float | None:
+    vals = [v for v in values if v is not None]
+    return round(median(vals), 4) if vals else None
 
 
 def compare(c: GateComparison) -> list[GateRow]:
@@ -414,32 +428,47 @@ def compare(c: GateComparison) -> list[GateRow]:
 
     rows = []
     for kind in GATE_KINDS:
-        r = c.runs.get(kind)
-        if r is None:
+        rs = c.runs.get(kind) or []
+        if not rs:
             continue
-        agent_cost = cost_usd("llm", r.agent_input_tokens, r.agent_output_tokens, c.llm_usd_per_mtok)
-        if kind == "none":
-            gate_cost: float | None = 0.0
-        else:
-            gate_cost = cost_usd(kind, r.gate_input_tokens, r.gate_output_tokens, c.llm_usd_per_mtok)
-        total = None if agent_cost is None or gate_cost is None else agent_cost + gate_cost
+        gate_ms = [sum(d.latency_ms for d in r.decisions) for r in rs]
+        per_call = [d.latency_ms for r in rs for d in r.decisions]
+        agent_costs = [cost_usd("llm", r.agent_input_tokens, r.agent_output_tokens, c.llm_usd_per_mtok) for r in rs]
+        gate_costs = [0.0 if kind == "none" else cost_usd(kind, r.gate_input_tokens, r.gate_output_tokens, c.llm_usd_per_mtok) for r in rs]
+        totals = [None if a is None or g is None else a + g for a, g in zip(agent_costs, gate_costs)]
+        total_ms = median(r.total_ms for r in rs)
+        g_ms = median(gate_ms)
         rows.append(GateRow(
-            kind, r.total_ms, sum(1 for m in r.transcript if m["role"] == "tool"),
-            len(r.blocked), sum(d.latency_ms for d in r.decisions), agent_cost, gate_cost, total,
+            gate=kind,
+            runs=len(rs),
+            total_ms=round(total_ms, 1),
+            agent_ms=round(median(r.total_ms - g for r, g in zip(rs, gate_ms)), 1),
+            tool_calls=median(sum(1 for m in r.transcript if m["role"] == "tool") for r in rs),
+            blocked=median(len(r.blocked) for r in rs),
+            gate_ms=round(g_ms, 1),
+            gate_ms_per_call=round(median(per_call), 1) if per_call else None,
+            gate_share=(g_ms / total_ms) if total_ms else 0.0,
+            agent_cost_usd=_median(agent_costs),
+            gate_cost_usd=_median(gate_costs),
+            total_cost_usd=_median(totals),
         ))
     return rows
 
 
-def run_gate_comparison(mode: Mode = "live", task: str = TASK) -> GateComparison:
-    """Run the same task three times: no gate, LLM gate, Jev gate (or replay all three)."""
+def run_gate_comparison(mode: Mode = "live", task: str = TASK, runs: int = 1) -> GateComparison:
+    """Run the same task with each gate `runs` times (or replay). Interleaved, so drift in the
+    LLM's speed during the measurement hits every gate kind equally."""
     from jevdemo.llm_judge import llm_price_from_env
 
     if mode == "offline":
         envelope = load_recording(COMPARISON)
         return GateComparison.from_dict(envelope["data"], origin=origin_of(envelope))
-    runs = {kind: run_agent_live(kind, task) for kind in GATE_KINDS}
-    result = GateComparison(runs, llm_price_from_env())
+    results: dict[str, list[AgentGateResult]] = {kind: [] for kind in GATE_KINDS}
+    for _ in range(max(1, runs)):
+        for kind in GATE_KINDS:
+            results[kind].append(run_agent_live(kind, task))
+    result = GateComparison(results, llm_price_from_env())
     if mode == "record":
         save_recording(COMPARISON, result.to_dict())
-        save_recording(RECORDING, runs["jev"].to_dict())  # keep demo 3's own recording in sync
+        save_recording(RECORDING, results["jev"][-1].to_dict())  # keep demo 3's own recording in sync
     return result

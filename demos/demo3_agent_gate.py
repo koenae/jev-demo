@@ -19,28 +19,40 @@ def fmt_usd(value: float | None) -> str:
     return "n/a" if value is None else f"${value:.5f}"
 
 
-def main_compare(mode: str) -> None:
+def main_compare(mode: str, runs: int) -> None:
     console.print(
         Panel(
-            "Same task, three runs: no gate, the LLM as judge on every tool call, Jev as judge. "
-            "Wall time and cost of the whole agent run.",
+            "Same task with three gates: none, the LLM as judge on every tool call, Jev as judge. "
+            "The agent's own turns vary a lot between runs, so look at the gate columns first; "
+            "use --runs 3 or more for medians.",
             title="Demo 3 - Gate comparison",
             style="cyan",
         )
     )
-    result = run_gate_comparison(mode)  # type: ignore[arg-type]
+    result = run_gate_comparison(mode, runs=runs)  # type: ignore[arg-type]
     console.print(origin_badge(result.origin))
-    table = Table(title="none vs LLM gate vs Jev gate")
-    for col in ("gate", "agent run", "tool calls", "blocked", "gate time", "agent cost", "gate cost", "total cost"):
+    rows = compare(result)
+    table = Table(title=f"none vs LLM gate vs Jev gate (medians over {rows[0].runs if rows else 0} run(s) each)")
+    for col in ("gate", "gate / call", "gate time", "share of run", "agent run", "agent w/o gate", "tool calls", "blocked", "agent cost", "gate cost", "total cost"):
         table.add_column(col, justify="left" if col == "gate" else "right")
-    for row in compare(result):
+    for row in rows:
         style = "green" if row.gate == "jev" else ""
         table.add_row(
             f"[{style}]{row.gate}[/{style}]" if style else row.gate,
-            f"{row.total_ms / 1000:.1f} s", str(row.tool_calls), str(row.blocked),
-            f"{row.gate_ms / 1000:.1f} s", fmt_usd(row.agent_cost_usd), fmt_usd(row.gate_cost_usd), fmt_usd(row.total_cost_usd),
+            "-" if row.gate_ms_per_call is None else f"{row.gate_ms_per_call:.0f} ms",
+            f"{row.gate_ms / 1000:.1f} s", f"{row.gate_share:.0%}",
+            f"{row.total_ms / 1000:.1f} s", f"{row.agent_ms / 1000:.1f} s",
+            f"{row.tool_calls:g}", f"{row.blocked:g}",
+            fmt_usd(row.agent_cost_usd), fmt_usd(row.gate_cost_usd), fmt_usd(row.total_cost_usd),
         )
     console.print(table)
+    by = {r.gate: r for r in rows}
+    if "llm" in by and "jev" in by and by["jev"].gate_ms_per_call:
+        console.print(
+            f"Per judged tool call: LLM gate {by['llm'].gate_ms_per_call:.0f} ms vs Jev gate {by['jev'].gate_ms_per_call:.0f} ms "
+            f"-> [green]{by['llm'].gate_ms_per_call / by['jev'].gate_ms_per_call:.1f}x[/green]. "
+            "The 'agent run' totals include the agent's own LLM turns, which differ per run (different paths, reasoning time)."
+        )
     if result.llm_usd_per_mtok is None:
         console.print("[yellow]Tip: set LLM_PRICE_INPUT_PER_MTOK / LLM_PRICE_OUTPUT_PER_MTOK in .env for the cost columns.[/yellow]")
     if mode == "record":
@@ -99,10 +111,11 @@ if __name__ == "__main__":
     group.add_argument("--offline", action="store_true")
     parser.add_argument("--gate", choices=("none", "llm", "jev"), default="jev", help="who judges the tool calls")
     parser.add_argument("--compare", action="store_true", help="run all three gates and compare time and cost")
+    parser.add_argument("--runs", type=int, default=1, help="with --compare: runs per gate kind (medians)")
     args = parser.parse_args()
     try:
         if args.compare:
-            main_compare(mode_from(args))
+            main_compare(mode_from(args), args.runs)
         else:
             main(mode_from(args), args.gate)
     except Exception as error:  # noqa: BLE001
