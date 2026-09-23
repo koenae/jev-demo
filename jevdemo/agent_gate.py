@@ -150,11 +150,15 @@ class JevToolGate(AgentMiddleware):
         self.classifier = classifier
         self.threshold = threshold
         self.decisions: list[GateDecision] = []
+        self.input_tokens = 0   # Jev output tokens are free, so only input counts for cost
+        self.output_tokens = 0
 
     def wrap_tool_call(self, request: ToolCallRequest, handler: Callable):
         call = request.tool_call
         body = {"state": gate_state(request), "questions": GATE_QUESTIONS}
         response, ms = timed(lambda: self.classifier.invoke(body))
+        self.input_tokens += response.usage.input_tokens or 0
+        self.output_tokens += response.usage.output_tokens or 0
         p = {name: answer.noul for name, answer in response.nouls.items()}
         blocked, reason = decide(p, self.threshold)
         self.decisions.append(

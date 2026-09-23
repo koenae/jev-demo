@@ -79,6 +79,28 @@ Context om te vermelden: de service draait aan de US West Coast; RTT vanuit Belg
 Californië is doorgaans ~140–160 ms (meet het zelf met `ping`/`curl -w` naar
 `api.typesafe.ai`), dus de vloer vanuit de EU ligt boven de vendor-vloer van 70 ms.
 
+## Eerste echte metingen (23 sept 2026, gpt-5-mini via Foundry, `LLM_REASONING_EFFORT=minimal`, $0.25 / $2.00 per M tokens)
+
+Uit de `--record`-runs; de recordings in de repo zijn de bron.
+
+| Wat | LLM (gpt-5-mini) | Jev (jev-latest) | Verhouding |
+|---|---|---|---|
+| Triage, mediaan per call (11 tickets) | 1595 ms | 338 ms | 4.7× sneller |
+| Gate, mediaan per call (6 tool calls) | 1374 ms | 321 ms | 4.3× sneller |
+| Kost per 1000 triage-beslissingen | $0.127 | $0.021 | 6× goedkoper |
+| Input-tokens per triage-call | ~282 | ~511 | Jev telt méér input-tokens |
+| Overeenstemming triage | team 100%, urgency 73%, refund 100% | | |
+| Overeenstemming gate | destructive 100%, production 100%, secrets 83% (G-6: Jev ziet secrets in een error-log, het LLM niet) | | |
+| Agent-gate per beoordeelde tool call (3 runs) | 1490 ms, 59% van de run | 440 ms, 27% van de run | 3.4× |
+| Demo 5, T-109 (ambigu) | 75% billing / 25% technical over 20 samples, zegt zelf 0.84 | billing 0.54 / technical 0.45, confidence **0.38**, spread over 3 herhalingen **0.12** | 20 samples: $0.00193 en 34 s; 1 call: $0.000017 en 0.4 s (~110×) |
+| Demo 5, T-102 (duidelijk) | 100% billing, zegt zelf 0.93 | billing 1.00, confidence 1.00, spread 0.00 | |
+
+Wat dit betekent voor het verhaal:
+- **6× goedkoper, geen 444×.** Met een goedkoop, snel LLM en dezelfde korte prompts is de kostwinst bescheiden, ook omdat Jev per call meer input-tokens rapporteert (vragen en criteria tellen mee, andere tokenizer). De vendor-factor komt uit een zwaardere LLM-workflow. Zeg dat.
+- **Jev is niet deterministisch.** Drie identieke calls op T-109 verschilden tot 0.12 in kans. Jev geeft de verdeling, maar die verdeling wiebelt. Meet de spread altijd mee.
+- **Confidence ≠ topkans.** Jev gaf confidence 0.38 bij een topkans van 0.54: confidence meet hoe geconcentreerd de verdeling is, niet de kans op het gekozen label. Pas slide 5 zo aan als je dit wil benadrukken.
+- **Het sterkste cijfer** is demo 5: 20 LLM-samples reconstrueren grofweg wat Jev in één call geeft, voor ~110× de kost en ~80× de tijd, en het LLM meldt intussen 0.84 confidence terwijl het in een kwart van de gevallen anders antwoordt.
+
 ## Gebruikte versies (exact gepind in `pyproject.toml`)
 
 | Package | Versie | Opmerking |
