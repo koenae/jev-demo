@@ -56,8 +56,9 @@ Elke demo heeft dezelfde vlaggen:
 - `--offline`: speelt de opname af, zonder netwerk of key
 
 Demo 4 heeft het LLM én TypeSafe nodig. Zet `LLM_PRICE_INPUT_PER_MTOK` en
-`LLM_PRICE_OUTPUT_PER_MTOK` (USD per miljoen tokens, van de prijspagina van je provider) in
-`.env` voor de kostenkolommen; voor gpt-5-modellen is `LLM_REASONING_EFFORT=minimal` de
+`LLM_PRICE_OUTPUT_PER_MTOK` (USD per miljoen tokens) in `.env` voor de kostenkolommen. Voor
+Azure OpenAI / Foundry haalt `uv run python scripts/llm_prices.py --model gpt-5-mini` ze op via
+de publieke Azure Retail Prices API (geen login) en stelt de twee regels voor; voor gpt-5-modellen is `LLM_REASONING_EFFORT=minimal` de
 eerlijkste snelheidsvergelijking. De calls lopen 4 tegelijk.
 
 Voor demo 3 wordt niets echt uitgevoerd: de shell-, SQL- en file-tools zijn nep en geven
