@@ -16,6 +16,9 @@ dependencies = [
 ]
 
 [dependency-groups]
+blog = [
+    "matplotlib==3.10.6",
+]
 export = [
     "nbformat==5.10.4",
     "nbconvert==7.16.6",
