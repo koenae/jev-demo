@@ -1,7 +1,7 @@
 {
   "demo": "latency_benchmark",
-  "source": "synthetic-placeholder",
-  "recorded_at": "2026-09-21T14:16:24+00:00",
+  "source": "live",
+  "recorded_at": "2026-09-21T20:44:55+00:00",
   "versions": {
     "typesafe-sdk": "0.7.0",
     "langchain": "1.4.2",
@@ -15,65 +15,65 @@
     "python-dotenv": "1.2.3"
   },
   "data": {
-    "location": "PLACEHOLDER - not measured. Run scripts/benchmark.py from Belgium.",
+    "location": "",
     "calls_per_demo": 10,
     "results": {
       "demo1_smart_if": {
         "samples_ms": [
-          412,
-          398,
-          445,
-          380,
-          402,
-          521,
-          391,
-          410,
-          388,
-          405
+          253.8,
+          254.9,
+          253.0,
+          264.1,
+          254.6,
+          260.5,
+          254.5,
+          235.7,
+          265.5,
+          292.8
         ],
         "n": 10,
-        "median_ms": 403.5,
-        "p95_ms": 486.8,
-        "min_ms": 380,
-        "max_ms": 521
+        "median_ms": 254.7,
+        "p95_ms": 280.5,
+        "min_ms": 235.7,
+        "max_ms": 292.8
       },
       "demo2_confidence_gate": {
         "samples_ms": [
-          388,
-          401,
-          372,
-          395,
-          431,
-          379,
-          366,
-          351,
-          447,
-          402
+          267.9,
+          269.3,
+          258.7,
+          296.9,
+          244.1,
+          238.0,
+          254.2,
+          277.1,
+          261.7,
+          288.4
         ],
         "n": 10,
-        "median_ms": 391.5,
-        "p95_ms": 439.8,
-        "min_ms": 351,
-        "max_ms": 447
+        "median_ms": 264.8,
+        "p95_ms": 293.1,
+        "min_ms": 238.0,
+        "max_ms": 296.9
       },
       "demo3_agent_gate": {
         "samples_ms": [
-          402,
-          437,
-          418,
-          395,
-          460,
-          410,
-          399,
-          428,
-          405,
-          512
+          1055.9,
+          341.2,
+          408.8,
+          512.3,
+          290.2,
+          324.1,
+          409.9,
+          298.9,
+          417.5,
+          409.3
         ],
         "n": 10,
-        "median_ms": 414.0,
-        "p95_ms": 488.6,
-        "min_ms": 395,
-        "max_ms": 512
+        "median_ms": 409.1,
+        "p95_ms": 811.3,
+        "min_ms": 290.2,
+        "max_ms": 1055.9
       }
     }
   }
