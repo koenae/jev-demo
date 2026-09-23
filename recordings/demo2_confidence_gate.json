@@ -1,7 +1,7 @@
 {
   "demo": "demo2_confidence_gate",
-  "source": "synthetic-placeholder",
-  "recorded_at": "2026-09-23T12:27:35+00:00",
+  "source": "live",
+  "recorded_at": "2026-09-21T20:42:18+00:00",
   "versions": {
     "typesafe-sdk": "0.7.0",
     "langchain": "1.4.2",
@@ -22,22 +22,22 @@
         "team": {
           "type": "choice",
           "choice": "technical",
-          "confidence": 0.95,
+          "confidence": 1.0,
           "probabilities": {
-            "technical": 0.95,
-            "billing": 0.02,
-            "sales": 0.01,
-            "other": 0.02
+            "sales": 0.0,
+            "other": 0.0,
+            "billing": 0.0,
+            "technical": 1.0
           }
         },
         "urgency": {
           "type": "score",
-          "score": 1.88,
-          "confidence": 0.9,
+          "score": 2.0,
+          "confidence": 1.0,
           "probabilities": {
-            "0": 0.02,
-            "1": 0.08,
-            "2": 0.9
+            "0": 0.0,
+            "1": 0.0,
+            "2": 1.0
           },
           "legend": {
             "0": "No time pressure; can wait a week.",
@@ -46,11 +46,11 @@
           }
         },
         "meta": {
-          "latency_ms": 388.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 109,
-          "output_tokens": 0,
-          "request_id": null
+          "latency_ms": 721.5,
+          "model": "jev-1.13.0",
+          "input_tokens": 460,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b47fed7ff5ba9ed10e9701e3bf"
         }
       },
       {
@@ -59,22 +59,22 @@
         "team": {
           "type": "choice",
           "choice": "billing",
-          "confidence": 0.96,
+          "confidence": 1.0,
           "probabilities": {
-            "billing": 0.96,
-            "technical": 0.02,
-            "sales": 0.01,
-            "other": 0.01
+            "billing": 1.0,
+            "technical": 0.0,
+            "sales": 0.0,
+            "other": 0.0
           }
         },
         "urgency": {
           "type": "score",
-          "score": 0.95,
-          "confidence": 0.65,
+          "score": 0.98,
+          "confidence": 0.96,
           "probabilities": {
-            "0": 0.2,
-            "1": 0.65,
-            "2": 0.15
+            "0": 0.02,
+            "1": 0.98,
+            "2": 0.0
           },
           "legend": {
             "0": "No time pressure; can wait a week.",
@@ -83,11 +83,11 @@
           }
         },
         "meta": {
-          "latency_ms": 401.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 106,
-          "output_tokens": 0,
-          "request_id": null
+          "latency_ms": 242.4,
+          "model": "jev-1.13.0",
+          "input_tokens": 453,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b4810e735987cfc09a2046d66a"
         }
       },
       {
@@ -96,206 +96,21 @@
         "team": {
           "type": "choice",
           "choice": "sales",
-          "confidence": 0.91,
+          "confidence": 1.0,
           "probabilities": {
-            "sales": 0.91,
-            "billing": 0.07,
-            "technical": 0.01,
-            "other": 0.01
+            "billing": 0.0,
+            "sales": 1.0,
+            "other": 0.0,
+            "technical": 0.0
           }
         },
         "urgency": {
           "type": "score",
-          "score": 0.28,
-          "confidence": 0.75,
+          "score": 0.43,
+          "confidence": 0.36,
           "probabilities": {
-            "0": 0.75,
-            "1": 0.22,
-            "2": 0.03
-          },
-          "legend": {
-            "0": "No time pressure; can wait a week.",
-            "1": "Should be handled within a few days.",
-            "2": "Blocking the customer; needs a same-day response."
-          }
-        },
-        "meta": {
-          "latency_ms": 372.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 106,
-          "output_tokens": 0,
-          "request_id": null
-        }
-      },
-      {
-        "ticket_id": "T-104",
-        "text": "Where can I download my invoices as PDF? I can't find the button.",
-        "team": {
-          "type": "choice",
-          "choice": "billing",
-          "confidence": 0.66,
-          "probabilities": {
-            "billing": 0.66,
-            "other": 0.21,
-            "technical": 0.12,
-            "sales": 0.01
-          }
-        },
-        "urgency": {
-          "type": "score",
-          "score": 0.5,
-          "confidence": 0.55,
-          "probabilities": {
-            "0": 0.55,
-            "1": 0.4,
-            "2": 0.05
-          },
-          "legend": {
-            "0": "No time pressure; can wait a week.",
-            "1": "Should be handled within a few days.",
-            "2": "Blocking the customer; needs a same-day response."
-          }
-        },
-        "meta": {
-          "latency_ms": 395.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 106,
-          "output_tokens": 0,
-          "request_id": null
-        }
-      },
-      {
-        "ticket_id": "T-105",
-        "text": "The webhook for 'invoice.paid' never fires, so our accounting sync is broken and finance can't close the month.",
-        "team": {
-          "type": "choice",
-          "choice": "technical",
-          "confidence": 0.52,
-          "probabilities": {
-            "technical": 0.52,
-            "billing": 0.45,
-            "sales": 0.01,
-            "other": 0.02
-          }
-        },
-        "urgency": {
-          "type": "score",
-          "score": 1.45,
-          "confidence": 0.5,
-          "probabilities": {
-            "0": 0.05,
-            "1": 0.45,
-            "2": 0.5
-          },
-          "legend": {
-            "0": "No time pressure; can wait a week.",
-            "1": "Should be handled within a few days.",
-            "2": "Blocking the customer; needs a same-day response."
-          }
-        },
-        "meta": {
-          "latency_ms": 431.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 117,
-          "output_tokens": 0,
-          "request_id": null
-        }
-      },
-      {
-        "ticket_id": "T-106",
-        "text": "How many seats are included in the Team plan, and can we add SSO later?",
-        "team": {
-          "type": "choice",
-          "choice": "sales",
-          "confidence": 0.62,
-          "probabilities": {
-            "sales": 0.62,
-            "technical": 0.33,
-            "billing": 0.03,
-            "other": 0.02
-          }
-        },
-        "urgency": {
-          "type": "score",
-          "score": 0.33,
-          "confidence": 0.7,
-          "probabilities": {
-            "0": 0.7,
-            "1": 0.27,
-            "2": 0.03
-          },
-          "legend": {
-            "0": "No time pressure; can wait a week.",
-            "1": "Should be handled within a few days.",
-            "2": "Blocking the customer; needs a same-day response."
-          }
-        },
-        "meta": {
-          "latency_ms": 379.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 107,
-          "output_tokens": 0,
-          "request_id": null
-        }
-      },
-      {
-        "ticket_id": "T-107",
-        "text": "Password reset email never arrives (checked spam). Locked out of my account.",
-        "team": {
-          "type": "choice",
-          "choice": "technical",
-          "confidence": 0.9,
-          "probabilities": {
-            "technical": 0.9,
-            "other": 0.05,
-            "billing": 0.03,
-            "sales": 0.02
-          }
-        },
-        "urgency": {
-          "type": "score",
-          "score": 1.55,
-          "confidence": 0.6,
-          "probabilities": {
-            "0": 0.05,
-            "1": 0.35,
-            "2": 0.6
-          },
-          "legend": {
-            "0": "No time pressure; can wait a week.",
-            "1": "Should be handled within a few days.",
-            "2": "Blocking the customer; needs a same-day response."
-          }
-        },
-        "meta": {
-          "latency_ms": 366.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 109,
-          "output_tokens": 0,
-          "request_id": null
-        }
-      },
-      {
-        "ticket_id": "T-108",
-        "text": "Thanks for the great support last week, no action needed!",
-        "team": {
-          "type": "choice",
-          "choice": "other",
-          "confidence": 0.94,
-          "probabilities": {
-            "other": 0.94,
-            "technical": 0.02,
-            "billing": 0.02,
-            "sales": 0.02
-          }
-        },
-        "urgency": {
-          "type": "score",
-          "score": 0.06,
-          "confidence": 0.95,
-          "probabilities": {
-            "0": 0.95,
-            "1": 0.04,
+            "0": 0.57,
+            "1": 0.42,
             "2": 0.01
           },
           "legend": {
@@ -305,35 +120,35 @@
           }
         },
         "meta": {
-          "latency_ms": 351.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 104,
-          "output_tokens": 0,
-          "request_id": null
+          "latency_ms": 248.2,
+          "model": "jev-1.13.0",
+          "input_tokens": 452,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b4820373f3b0ec0cbbd32dda55"
         }
       },
       {
-        "ticket_id": "T-109",
-        "text": "My subscription renewed but the new features from the upgrade aren't showing. Did the payment go through or is this a bug?",
+        "ticket_id": "T-104",
+        "text": "Where can I download my invoices as PDF? I can't find the button.",
         "team": {
           "type": "choice",
           "choice": "billing",
-          "confidence": 0.49,
+          "confidence": 0.97,
           "probabilities": {
-            "billing": 0.49,
-            "technical": 0.47,
-            "sales": 0.02,
-            "other": 0.02
+            "other": 0.0,
+            "billing": 0.98,
+            "technical": 0.02,
+            "sales": 0.0
           }
         },
         "urgency": {
           "type": "score",
-          "score": 1.1,
-          "confidence": 0.6,
+          "score": 0.82,
+          "confidence": 0.64,
           "probabilities": {
-            "0": 0.15,
-            "1": 0.6,
-            "2": 0.25
+            "0": 0.21,
+            "1": 0.76,
+            "2": 0.03
           },
           "legend": {
             "0": "No time pressure; can wait a week.",
@@ -342,11 +157,196 @@
           }
         },
         "meta": {
-          "latency_ms": 447.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 120,
-          "output_tokens": 0,
-          "request_id": null
+          "latency_ms": 274.6,
+          "model": "jev-1.13.0",
+          "input_tokens": 452,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b482fc7f03b65aeafeec64514c"
+        }
+      },
+      {
+        "ticket_id": "T-105",
+        "text": "The webhook for 'invoice.paid' never fires, so our accounting sync is broken and finance can't close the month.",
+        "team": {
+          "type": "choice",
+          "choice": "technical",
+          "confidence": 0.95,
+          "probabilities": {
+            "sales": 0.0,
+            "technical": 0.96,
+            "other": 0.0,
+            "billing": 0.04
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "score": 2.0,
+          "confidence": 0.99,
+          "probabilities": {
+            "0": 0.0,
+            "1": 0.0,
+            "2": 1.0
+          },
+          "legend": {
+            "0": "No time pressure; can wait a week.",
+            "1": "Should be handled within a few days.",
+            "2": "Blocking the customer; needs a same-day response."
+          }
+        },
+        "meta": {
+          "latency_ms": 284.6,
+          "model": "jev-1.13.0",
+          "input_tokens": 461,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b484137f679a246e5176b2397e"
+        }
+      },
+      {
+        "ticket_id": "T-106",
+        "text": "How many seats are included in the Team plan, and can we add SSO later?",
+        "team": {
+          "type": "choice",
+          "choice": "sales",
+          "confidence": 0.98,
+          "probabilities": {
+            "sales": 0.98,
+            "billing": 0.01,
+            "technical": 0.01,
+            "other": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "score": 0.52,
+          "confidence": 0.27,
+          "probabilities": {
+            "0": 0.49,
+            "1": 0.51,
+            "2": 0.0
+          },
+          "legend": {
+            "0": "No time pressure; can wait a week.",
+            "1": "Should be handled within a few days.",
+            "2": "Blocking the customer; needs a same-day response."
+          }
+        },
+        "meta": {
+          "latency_ms": 301.9,
+          "model": "jev-1.13.0",
+          "input_tokens": 454,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b485497a11bb514814685ad8fa"
+        }
+      },
+      {
+        "ticket_id": "T-107",
+        "text": "Password reset email never arrives (checked spam). Locked out of my account.",
+        "team": {
+          "type": "choice",
+          "choice": "technical",
+          "confidence": 1.0,
+          "probabilities": {
+            "billing": 0.0,
+            "sales": 0.0,
+            "technical": 1.0,
+            "other": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "score": 2.0,
+          "confidence": 1.0,
+          "probabilities": {
+            "0": 0.0,
+            "1": 0.0,
+            "2": 1.0
+          },
+          "legend": {
+            "0": "No time pressure; can wait a week.",
+            "1": "Should be handled within a few days.",
+            "2": "Blocking the customer; needs a same-day response."
+          }
+        },
+        "meta": {
+          "latency_ms": 262.8,
+          "model": "jev-1.13.0",
+          "input_tokens": 451,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b48657727d946f1397461a37e1"
+        }
+      },
+      {
+        "ticket_id": "T-108",
+        "text": "Thanks for the great support last week, no action needed!",
+        "team": {
+          "type": "choice",
+          "choice": "other",
+          "confidence": 1.0,
+          "probabilities": {
+            "billing": 0.0,
+            "other": 1.0,
+            "technical": 0.0,
+            "sales": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "score": 0.0,
+          "confidence": 1.0,
+          "probabilities": {
+            "0": 1.0,
+            "1": 0.0,
+            "2": 0.0
+          },
+          "legend": {
+            "0": "No time pressure; can wait a week.",
+            "1": "Should be handled within a few days.",
+            "2": "Blocking the customer; needs a same-day response."
+          }
+        },
+        "meta": {
+          "latency_ms": 276.4,
+          "model": "jev-1.13.0",
+          "input_tokens": 448,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b4875d7d16a4fdd0f7aef84a1c"
+        }
+      },
+      {
+        "ticket_id": "T-109",
+        "text": "My subscription renewed but the new features from the upgrade aren't showing. Did the payment go through or is this a bug?",
+        "team": {
+          "type": "choice",
+          "choice": "technical",
+          "confidence": 0.37,
+          "probabilities": {
+            "sales": 0.01,
+            "technical": 0.53,
+            "billing": 0.46,
+            "other": 0.0
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "score": 1.36,
+          "confidence": 0.45,
+          "probabilities": {
+            "0": 0.0,
+            "1": 0.63,
+            "2": 0.37
+          },
+          "legend": {
+            "0": "No time pressure; can wait a week.",
+            "1": "Should be handled within a few days.",
+            "2": "Blocking the customer; needs a same-day response."
+          }
+        },
+        "meta": {
+          "latency_ms": 270.8,
+          "model": "jev-1.13.0",
+          "input_tokens": 461,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b4887173fdab1f9d929858717f"
         }
       },
       {
@@ -355,22 +355,22 @@
         "team": {
           "type": "choice",
           "choice": "sales",
-          "confidence": 0.84,
+          "confidence": 1.0,
           "probabilities": {
-            "sales": 0.84,
-            "billing": 0.1,
-            "technical": 0.04,
-            "other": 0.02
+            "billing": 0.0,
+            "other": 0.0,
+            "sales": 1.0,
+            "technical": 0.0
           }
         },
         "urgency": {
           "type": "score",
-          "score": 0.4,
-          "confidence": 0.65,
+          "score": 0.76,
+          "confidence": 0.6,
           "probabilities": {
-            "0": 0.65,
-            "1": 0.3,
-            "2": 0.05
+            "0": 0.25,
+            "1": 0.74,
+            "2": 0.01
           },
           "legend": {
             "0": "No time pressure; can wait a week.",
@@ -379,11 +379,11 @@
           }
         },
         "meta": {
-          "latency_ms": 402.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 116,
-          "output_tokens": 0,
-          "request_id": null
+          "latency_ms": 281.8,
+          "model": "jev-1.13.0",
+          "input_tokens": 462,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b4898773f689d18ea97a6f7ab8"
         }
       },
       {
@@ -392,22 +392,22 @@
         "team": {
           "type": "choice",
           "choice": "other",
-          "confidence": 0.41,
+          "confidence": 0.54,
           "probabilities": {
-            "other": 0.41,
-            "technical": 0.3,
-            "billing": 0.19,
-            "sales": 0.1
+            "billing": 0.0,
+            "sales": 0.0,
+            "other": 0.66,
+            "technical": 0.34
           }
         },
         "urgency": {
           "type": "score",
-          "score": 1.0,
-          "confidence": 0.4,
+          "score": 1.92,
+          "confidence": 0.88,
           "probabilities": {
-            "0": 0.3,
-            "1": 0.4,
-            "2": 0.3
+            "0": 0.0,
+            "1": 0.07,
+            "2": 0.93
           },
           "legend": {
             "0": "No time pressure; can wait a week.",
@@ -416,11 +416,11 @@
           }
         },
         "meta": {
-          "latency_ms": 344.0,
-          "model": "jev-placeholder (synthetic, not a real model answer)",
-          "input_tokens": 95,
-          "output_tokens": 0,
-          "request_id": null
+          "latency_ms": 252.1,
+          "model": "jev-1.13.0",
+          "input_tokens": 440,
+          "output_tokens": 60,
+          "request_id": "req_01a0c5b48aa477b992b6a6348573f362"
         }
       }
     ]
