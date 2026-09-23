@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-09-23T18:11:27.816136</dc:date>
+    <dc:date>2026-09-23T18:25:29.750402</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -44,7 +44,7 @@ z
      <g id="line2d_1">
       <path d="M 96.3 255.121463 
 L 96.3 55.537463 
-" clip-path="url(#pdfb4a31134)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
+" clip-path="url(#p32736d7656)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
      </g>
      <g id="line2d_2"/>
      <g id="text_1">
@@ -90,7 +90,7 @@ z
      <g id="line2d_3">
       <path d="M 182.846939 255.121463 
 L 182.846939 55.537463 
-" clip-path="url(#pdfb4a31134)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
+" clip-path="url(#p32736d7656)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
      </g>
      <g id="line2d_4"/>
      <g id="text_2">
@@ -133,7 +133,7 @@ z
      <g id="line2d_5">
       <path d="M 269.393878 255.121463 
 L 269.393878 55.537463 
-" clip-path="url(#pdfb4a31134)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
+" clip-path="url(#p32736d7656)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
      </g>
      <g id="line2d_6"/>
      <g id="text_3">
@@ -528,7 +528,7 @@ L 226.120408 66.942263
 L 226.120408 82.148663 
 L 96.3 82.148663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_5">
     <path d="M 96.3 85.950263 
@@ -536,7 +536,7 @@ L 189.770694 85.950263
 L 189.770694 101.156663 
 L 96.3 101.156663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="text_8">
     <!-- 0.75 -->
@@ -595,7 +595,7 @@ L 139.573469 114.462263
 L 139.573469 129.668663 
 L 96.3 129.668663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_7">
     <path d="M 96.3 133.470263 
@@ -603,7 +603,7 @@ L 174.192245 133.470263
 L 174.192245 148.676663 
 L 96.3 148.676663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="text_10">
     <!-- 0.25 -->
@@ -655,7 +655,7 @@ L 96.3 161.982263
 L 96.3 177.188663 
 L 96.3 177.188663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_9">
     <path d="M 96.3 180.990263 
@@ -663,7 +663,7 @@ L 98.030939 180.990263
 L 98.030939 196.196663 
 L 96.3 196.196663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="text_12">
     <!-- 0.01 -->
@@ -680,7 +680,7 @@ L 96.3 209.502263
 L 96.3 224.708663 
 L 96.3 224.708663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_11">
     <path d="M 96.3 228.510263 
@@ -688,7 +688,7 @@ L 96.3 228.510263
 L 96.3 243.716663 
 L 96.3 243.716663 
 z
-" clip-path="url(#pdfb4a31134)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#p32736d7656)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="text_13">
     <!-- LLM agrees with itself 75% of the time, reports 0.84 confidence -->
@@ -1334,7 +1334,7 @@ z
      <g id="line2d_11">
       <path d="M 410.032653 255.121463 
 L 410.032653 55.537463 
-" clip-path="url(#p69f7b513bc)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
      </g>
      <g id="line2d_12"/>
      <g id="text_17">
@@ -1350,7 +1350,7 @@ L 410.032653 55.537463
      <g id="line2d_13">
       <path d="M 496.579592 255.121463 
 L 496.579592 55.537463 
-" clip-path="url(#p69f7b513bc)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
      </g>
      <g id="line2d_14"/>
      <g id="text_18">
@@ -1366,7 +1366,7 @@ L 496.579592 55.537463
      <g id="line2d_15">
       <path d="M 583.126531 255.121463 
 L 583.126531 55.537463 
-" clip-path="url(#p69f7b513bc)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: none; stroke: var(--ce6e5e1); stroke-linecap: square"/>
      </g>
      <g id="line2d_16"/>
      <g id="text_19">
@@ -1450,7 +1450,7 @@ L 583.126531 66.942263
 L 583.126531 82.148663 
 L 410.032653 82.148663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_17">
     <path d="M 410.032653 85.950263 
@@ -1458,7 +1458,7 @@ L 583.126531 85.950263
 L 583.126531 101.156663 
 L 410.032653 101.156663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="text_24">
     <!-- 1.00 -->
@@ -1484,7 +1484,7 @@ L 410.032653 114.462263
 L 410.032653 129.668663 
 L 410.032653 129.668663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_19">
     <path d="M 410.032653 133.470263 
@@ -1492,7 +1492,7 @@ L 410.032653 133.470263
 L 410.032653 148.676663 
 L 410.032653 148.676663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="patch_20">
     <path d="M 410.032653 161.982263 
@@ -1500,7 +1500,7 @@ L 410.032653 161.982263
 L 410.032653 177.188663 
 L 410.032653 177.188663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_21">
     <path d="M 410.032653 180.990263 
@@ -1508,7 +1508,7 @@ L 410.032653 180.990263
 L 410.032653 196.196663 
 L 410.032653 196.196663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="patch_22">
     <path d="M 410.032653 209.502263 
@@ -1516,7 +1516,7 @@ L 410.032653 209.502263
 L 410.032653 224.708663 
 L 410.032653 224.708663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--ceb6834)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--ceb6834)"/>
    </g>
    <g id="patch_23">
     <path d="M 410.032653 228.510263 
@@ -1524,7 +1524,7 @@ L 410.032653 228.510263
 L 410.032653 243.716663 
 L 410.032653 243.716663 
 z
-" clip-path="url(#p69f7b513bc)" style="fill: var(--c2a78d6)"/>
+" clip-path="url(#pa72c2a5ba8)" style="fill: var(--c2a78d6)"/>
    </g>
    <g id="text_26">
     <!-- LLM agrees with itself 100% of the time, reports 0.93 confidence -->
@@ -2033,10 +2033,10 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="pdfb4a31134">
+  <clipPath id="p32736d7656">
    <rect x="96.3" y="55.537463" width="216.367347" height="199.584"/>
   </clipPath>
-  <clipPath id="p69f7b513bc">
+  <clipPath id="pa72c2a5ba8">
    <rect x="410.032653" y="55.537463" width="216.367347" height="199.584"/>
   </clipPath>
  </defs>

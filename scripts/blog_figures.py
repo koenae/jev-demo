@@ -154,34 +154,34 @@ def fig_samples():
     finish(fig, "fig-2-one-call-vs-samples")
 
 
-# --- Figure 3: who judges the agent's tool calls -------------------------------------------
+# --- Figure 3: what one check by the judge costs ------------------------------------------
 
 def fig_gate():
     d = load("demo3_gate_comparison")
-    rows = []
-    for kind, label in (("none", "No gate"), ("llm", "gpt-5-mini as judge"), ("jev", "Jev as judge")):
+    stats = {}
+    for kind in ("llm", "jev"):
         runs = d["runs"][kind]
-        gate = median(sum(x["latency_ms"] for x in r["decisions"]) for r in runs)
-        total = median(r["total_ms"] for r in runs)
         per_call = [x["latency_ms"] for r in runs for x in r["decisions"]]
-        rows.append((label, kind, (total - gate) / 1000, gate / 1000, median(per_call) / 1000 if per_call else None, gate / total))
-    fig, ax = plt.subplots(figsize=(9.5, 2.9))
-    for i, (label, kind, agent_s, gate_s, per_call, share) in enumerate(rows):
-        rounded_bar(ax, i, agent_s, 0.42, GREY)
-        if gate_s:
-            color = LLM if kind == "llm" else JEV
-            rounded_bar(ax, i, gate_s, 0.42, color, left=agent_s + 0.06)
-            ax.text(agent_s + gate_s + 0.25, i, f"judge: {gate_s:.1f} s = {share:.0%} of the run · {per_call * 1000:.0f} ms per check",
-                    va="center", fontsize=9.5, color=INK)
-        else:
-            ax.text(agent_s + 0.25, i, f"{agent_s:.1f} s", va="center", fontsize=9.5, color=INK)
-    ax.set_yticks(range(len(rows))); ax.set_yticklabels([r[0] for r in rows])
-    ax.set_ylim(-0.6, len(rows) - 0.4); ax.invert_yaxis()
-    style_axes(ax, 20)
-    ax.set_xlabel("Wall time of one agent run, seconds (median of 3 runs)", fontsize=9.5)
-    legend(ax, [("Agent's own LLM turns", GREY), ("gpt-5-mini judging each tool call", LLM), ("Jev judging each tool call", JEV)], loc=(0.0, 1.02))
-    fig.text(0.0, -0.16, "Same 4-step SRE task, same three questions per tool call (destructive? production? secrets?), same block policy. "
-             "Agent turns vary 7-25 s between runs; the judge time is the part the gate controls.", fontsize=8.5, color=INK2, wrap=True)
+        tin = sum(r["gate_input_tokens"] for r in runs)
+        tout = sum(r["gate_output_tokens"] for r in runs)
+        cost = (tin * 0.25 + tout * 2.0) / 1e6 if kind == "llm" else tin * 0.042 / 1e6
+        stats[kind] = (median(per_call), cost / len(per_call) * 10_000, len(per_call))
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(9.5, 2.6), gridspec_kw={"wspace": 0.5})
+    for i, (kind, color, label) in enumerate((("llm", LLM, "gpt-5-mini as judge"), ("jev", JEV, "Jev as judge"))):
+        ms, usd, n = stats[kind]
+        rounded_bar(a1, i, ms, 0.5, color)
+        a1.text(ms + 30, i, f"{ms:,.0f} ms", va="center", fontsize=10, color=INK)
+        rounded_bar(a2, i, usd, 0.5, color)
+        a2.text(usd + 0.08, i, f"${usd:.2f}", va="center", fontsize=10, color=INK)
+    for ax, title, xmax, fmt in ((a1, "Judge latency per tool call (median)", 2000, "{x:,.0f}"), (a2, "Judge cost per 10,000 tool calls (USD)", 4.6, "${x:.0f}")):
+        ax.set_yticks([0, 1]); ax.set_yticklabels(["gpt-5-mini\nas judge", "Jev\nas judge"])
+        ax.set_ylim(-0.6, 1.6); ax.invert_yaxis()
+        style_axes(ax, xmax)
+        ax.xaxis.set_major_formatter(matplotlib.ticker.StrMethodFormatter(fmt))
+        ax.set_title(title, loc="left", fontsize=11, pad=8)
+    fig.text(0.0, -0.12, f"Same 4-step SRE task, same three questions per tool call (destructive? production? secrets?), same block policy; "
+             f"{stats['llm'][2]} LLM-judged and {stats['jev'][2]} Jev-judged tool calls over 3 runs each, 10 messages of history per check. "
+             "Jev's per-check latency was 320-440 ms in earlier sessions; this one was slow.", fontsize=8.5, color=INK2, wrap=True)
     finish(fig, "fig-3-agent-gate")
 
 
