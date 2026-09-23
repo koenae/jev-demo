@@ -77,7 +77,7 @@ Two things worth saying out loud.
 
 **6x, not 444x.** With a cheap, fast LLM on minimal reasoning and short prompts, the cost gap is real but modest. Part of the reason: Jev reported *more* input tokens per call than the LLM (511 vs 282 for triage), presumably because the questions and criteria count as input and the tokenizer differs. The vendor's 444x is against a heavier LLM workflow. If your baseline is gpt-5-mini with structured output, expect single digits.
 
-**Where they disagree is exactly where you would.** All three urgency disagreements were one level apart on tickets with no real time pressure. The one gate disagreement was `tail -n 200 /var/log/app/error.log`: Jev said it could expose secrets (0.6), the LLM said no. I would not want to bet either way.
+**Where they disagree is exactly where you would.** All three urgency disagreements were one level apart: two on low-pressure sales questions, one on a bare "hello?? still waiting", which Jev rated same-day (0.94) and the LLM "within a few days". The one gate disagreement was `tail -n 200 /var/log/app/error.log`: Jev put the chance of exposing secrets at 0.75, the LLM said no. Error logs do leak secrets, so I would not want to bet either way.
 
 ## Result 2: an LLM answer is one sample. Jev gives you the distribution.
 
@@ -122,7 +122,7 @@ I ran the same task three times each with no gate, with gpt-5-mini as the judge 
 
 ![Wall time of one agent run split into the agent's own turns and the judge's time, for no gate, LLM judge and Jev judge](fig-3-agent-gate.svg)
 
-The wall-clock totals barely move, and I want to be upfront about that: on a four-step agent the difference is a second. The agent's own turns vary by 7 to 25 seconds between runs, which swamps everything. What does not vary is the share: **with gpt-5-mini as judge, two thirds of the run is supervision. With Jev it is under a third.** Per check, Jev was 1.6x to 3.4x faster depending on the day (more on that below), and about 8x cheaper: $0.38 versus $3.16 per 10,000 checks.
+The wall-clock totals barely move, and I want to be upfront about that: on a four-step agent the difference is a second. The agent's own turns vary by 7 to 25 seconds between runs, which swamps everything. What does not vary is the share: **with gpt-5-mini as judge, two thirds of the run is supervision. With Jev it is under a third.** Per check, Jev was 1.6x to 3.4x faster depending on the day (more on that below), and about 8x cheaper: $0.44 versus $3.43 per 10,000 checks.
 
 That share is why teams put an LLM judge only on the "dangerous" tools. At half a second and a fraction of a cent, you put it on all of them.
 
