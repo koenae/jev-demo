@@ -42,7 +42,7 @@ The task is support ticket triage: which team should handle a ticket, with billi
 
 This could be billing or technical. I asked gpt-5-mini the team question twenty times, and Jev once. Next to it, as a control, a ticket where there is nothing to doubt: "I was charged EUR 49 twice this month. Please refund one of them."
 
-![Two bar charts. Left, the ambiguous ticket T-109: gpt-5-mini answered billing 15 times and technical 5 times out of 20 calls, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear ticket T-102: both give billing 1.00.](fig-2-one-call-vs-samples.svg)
+![Two bar charts. Left, the ambiguous upgrade ticket: gpt-5-mini answered billing 15 times and technical 5 times out of 20 calls, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear double-charge ticket: both give billing 1.00.](fig-2-one-call-vs-samples.svg)
 
 - gpt-5-mini said **billing 15 times** and **technical 5 times**. On average it reported a confidence of **0.84**.
 - Jev said **billing 0.54** and **technical 0.45**, in one call.
@@ -51,9 +51,9 @@ That 0.84 is not measured by anything. I put a `confidence` field in the output 
 
 So the LLM changes its answer one time in four, and still says it is 84% sure. Jev's 0.54 at least says openly that this ticket is a close call.
 
-The double-charge ticket is the control. There both say billing at 100%, so the LLM is not broken and Jev is not vague by default. T-109 is simply a close call, and Jev shows that in one call where the LLM needed twenty.
+The double-charge ticket is the control. There both say billing at 100%, so the LLM is not broken and Jev is not vague by default. The upgrade ticket is simply a close call, and Jev shows that in one call where the LLM needed twenty.
 
-To get the same picture from the LLM, I had to sample it. For T-109 alone, the 20 LLM calls took 33.6 s and cost $0.00193. One Jev call on the same ticket took 0.4 s and cost $0.000017.
+To get the same picture from the LLM, I had to sample it. For the upgrade ticket alone, the 20 LLM calls took 33.6 s and cost $0.00193. One Jev call on the same ticket took 0.4 s and cost $0.000017.
 
 Jev is not fully stable either. Three identical calls moved its probabilities by up to 0.12. I come back to that at the end.
 

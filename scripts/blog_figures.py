@@ -146,8 +146,7 @@ def fig_samples():
         ax.set_yticks(range(len(labels))); ax.set_yticklabels(labels)
         ax.set_ylim(-0.6, len(labels) - 0.4); ax.invert_yaxis()
         style(ax, 1.3)
-        kind = "ambiguous ticket" if t["ticket_id"] == "T-109" else "clear ticket"
-        title(ax, f"{t['ticket_id']}, {kind}")
+        title(ax, "Upgrade ticket, ambiguous" if t["ticket_id"] == "T-109" else "Double charge, clear")
     legend(fig, [(f"gpt-5-mini, answers out of {n} calls", LLM), ("Jev, probability from 1 call", JEV)])
     finish(fig, "fig-2-one-call-vs-samples")
 
