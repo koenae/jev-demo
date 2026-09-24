@@ -42,7 +42,7 @@ The task is support ticket triage: which team should handle a ticket, with billi
 
 This could be billing or technical. I asked gpt-5-mini the team question twenty times, and Jev once. Next to it, as a control, a ticket where there is nothing to doubt: "I was charged EUR 49 twice this month. Please refund one of them."
 
-![Two bar charts. Left, the ambiguous ticket T-109: gpt-5-mini answered billing in 75% and technical in 25% of 20 samples, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear ticket T-102: both give billing 1.00.](fig-2-one-call-vs-samples.svg)
+![Two bar charts. Left, the ambiguous ticket T-109: gpt-5-mini answered billing 15 times and technical 5 times out of 20 calls, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear ticket T-102: both give billing 1.00.](fig-2-one-call-vs-samples.svg)
 
 - gpt-5-mini said **billing 15 times** and **technical 5 times**. On average it reported a confidence of **0.84**.
 - Jev said **billing 0.54** and **technical 0.45**, in one call.
