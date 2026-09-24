@@ -53,7 +53,7 @@ So the LLM changes its answer one time in four, and still says it is 84% sure. J
 
 The double-charge ticket is the control. There both say billing at 100%, so the LLM is not broken and Jev is not vague by default. T-109 is simply a close call, and Jev shows that in one call where the LLM needed twenty.
 
-To get the same picture from the LLM, I have to sample it. For this one ticket, 20 LLM calls took 33.6 s and cost $0.00193. One Jev call took 0.4 s and cost $0.000017.
+To get the same picture from the LLM, I had to sample it. For T-109 alone, the 20 LLM calls took 33.6 s and cost $0.00193. One Jev call on the same ticket took 0.4 s and cost $0.000017.
 
 Jev is not fully stable either. Three identical calls moved its probabilities by up to 0.12. I come back to that at the end.
 
