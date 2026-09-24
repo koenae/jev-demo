@@ -32,8 +32,6 @@ I measured agreement, not accuracy. I had no labeled data, so "agree" only means
 
 Finding the gpt-5-mini price took longer than running the benchmark. The Foundry portal did not show it in a way I could find, so I queried the Azure Retail Prices API directly. The repo has a script for that.
 
-The TypeSafe docs site was unreachable from the sandbox where I built the repo, so the API usage comes from the installed SDK source rather than from the docs.
-
 ## Asking the same question twenty times
 
 This is the result that surprised me most, so it goes first.
