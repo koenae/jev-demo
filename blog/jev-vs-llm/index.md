@@ -9,9 +9,9 @@ draft: true
 
 ## Cool demos, but what does it do
 
-I first saw Jev in a few demos online. One where an agent browses a lot faster than the usual screenshot-and-think loop. One where an assistant on a Mac fires off actions almost in real time, as if there was no model in between. That is not what LLM demos normally look like, so I wanted to know what was doing the work.
+I first saw Jev in a few demos online. One where an agent browses a lot faster than the usual screenshot-and-think loop. One where an assistant on a Mac fires off actions almost in real time, as if there was no model in between. That triggered me into finding out what this Jev think is all about.
 
-Jev is a model from TypeSafe, launched in September 2026 and still in early access. It does not generate text. You send it some state and a typed question, and you get probabilities back. That is what makes those demos fast: nothing to parse, nothing to wait for, just a number per option.
+Jev is a model from TypeSafe, launched this month. It does not generate text. You send it some state and a typed question, and you get probabilities back. That is what makes those demos fast: nothing to parse, nothing to wait for, just a number per option.
 
 There are three question types:
 
@@ -19,14 +19,13 @@ There are three question types:
 2. **Score** places the input on an ordered scale, with a probability per level.
 3. **Noul** is a yes/no question. It returns P(yes).
 
-TypeSafe puts numbers next to it: 70-500 ms latency and "193x faster / 444x cheaper" than an LLM workflow. Those are their numbers on their workloads. I got access, and I wanted my own. So I sent the same decisions to Jev and to gpt-5-mini and recorded every call. The code and the recordings are in [a small repo](https://github.com/koenae/jev-demo).
+TypeSafe puts numbers next to it: 70-500 ms latency and "193x faster / 444x cheaper" than an LLM workflow. Those are their numbers on their workloads. There is now public access for the API for everyone to play around with it. So I built [a small repo](https://github.com/koenae/jev-demo) that sends the same decisions to Jev and to gpt-5-mini and records every call.
 
 ## The setup
 
 - **LLM:** gpt-5-mini on Microsoft Foundry, with `reasoning_effort=minimal` (its fastest and cheapest setting) and structured output. $0.25 input and $2.00 output per million tokens.
 - **Jev:** `jev-latest` through the Python SDK. $0.042 per million input tokens, output is free.
 - Both get the same criteria text and run 4 calls in parallel.
-- Everything was measured from Belgium on 23 September 2026.
 
 I measured agreement, not accuracy. I had no labeled data, so "agree" only means both gave the same answer.
 
