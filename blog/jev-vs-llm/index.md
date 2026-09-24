@@ -9,7 +9,7 @@ draft: true
 
 ## Why I looked at Jev
 
-In a few integrations I have used an LLM for a small decision. Which team gets this ticket. Is this tool call safe to run. The code usually ends up like this:
+I am preparing a talk about TypeSafe Jev, and while reading up on it one pattern kept coming back. Using an LLM for a small decision, which team gets this ticket, is this tool call safe to run, tends to end up as code like this:
 
 ```python
 label = llm(prompt).strip().lower()
@@ -17,9 +17,9 @@ if label == "billing":
     route_to_billing()
 ```
 
-This breaks as soon as the model answers `"Billing."` or `"I'd say billing"`. So I add JSON mode, a schema and retries.
+This breaks as soon as the model answers `"Billing."` or `"I'd say billing"`. The usual fix is JSON mode, a schema and retries.
 
-And even when the parsing works, I still don't know how sure the model was. What I actually want to write is `if P(billing) > 0.8:`.
+And even when the parsing works, there is still no way to know how sure the model was. What I would want to write instead is `if P(billing) > 0.8:`.
 
 ## What Jev is
 
