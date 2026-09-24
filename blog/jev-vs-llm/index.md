@@ -9,7 +9,7 @@ draft: true
 
 ## Why I looked at Jev
 
-I am preparing a talk about TypeSafe Jev, and while reading up on it one pattern kept coming back. Using an LLM for a small decision, which team gets this ticket, is this tool call safe to run, tends to end up as code like this:
+In September 2026 TypeSafe launched Jev and I got early access. Their pitch is that you stop asking an LLM for a small decision and parsing the text that comes back, and get probabilities instead. The example they use is the kind of code that many LLM integrations end up with:
 
 ```python
 label = llm(prompt).strip().lower()
@@ -17,13 +17,13 @@ if label == "billing":
     route_to_billing()
 ```
 
-This breaks as soon as the model answers `"Billing."` or `"I'd say billing"`. The usual fix is JSON mode, a schema and retries.
+This breaks as soon as the model answers `"Billing."` or `"I'd say billing"`. The usual fix is JSON mode, a schema and retries. And even when the parsing works, there is still no way to know how sure the model was. The line TypeSafe says you can write instead is `if P(billing) > 0.8:`.
 
-And even when the parsing works, there is still no way to know how sure the model was. What I would want to write instead is `if P(billing) > 0.8:`.
+That claim, plus the numbers they put next to it, made me curious enough to test it.
 
 ## What Jev is
 
-In September 2026 TypeSafe launched Jev, a model built for this kind of decision. It does not generate text. You send it some state and a typed question, and you get probabilities back.
+Jev does not generate text. You send it some state and a typed question, and you get probabilities back.
 
 There are three question types:
 
