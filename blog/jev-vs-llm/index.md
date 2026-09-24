@@ -54,7 +54,7 @@ The double-charge ticket is the control. There both say billing at 100%, so the 
 
 To get the same picture from the LLM, I had to sample it. For the upgrade ticket alone, the 20 LLM calls took 33.6 s and cost $0.00193. One Jev call on the same ticket took 0.4 s and cost $0.000017.
 
-Jev is not fully stable either. Three identical calls moved its probabilities by up to 0.12. I come back to that at the end.
+Jev is not fully stable either. Three identical calls moved its probabilities by up to 0.12, so a threshold on these numbers needs some margin.
 
 ## Same decisions, side by side
 
@@ -111,20 +111,12 @@ On a four-step agent, half a second per check is not visible in the total. But a
 
 One more thing I did not expect. When I cut the history the judge sees from 10 messages to 4, Jev blocked 2 of the 4 calls instead of 3, and the LLM blocked all 4, even `df -h`. So how much context the judge gets is a safety setting, not only a cost setting. I kept it at 10.
 
-## How I would use it
-
-I would start small. Take one decision that today goes prompt, text, parse, and turn it into a Choice or Noul question. Log the whole distribution, not just the winning label, so you can look back at what the close calls were.
-
-Then set a threshold above which the decision is automatic, and send everything below it to a person. I would not set that threshold by feel. The repo has a slider that replays the recorded decisions against any value, and that is a much better way to see what a given threshold actually does with your data.
-
-Two things to keep in mind. Jev's probabilities move a bit between identical calls, so leave a margin around the threshold instead of treating it as a sharp line. And the confidence value is not the top probability. It says how spread out the answer is, nothing more.
-
-I have not checked calibration against labeled data yet. Before using this in production I would, because it is the only way to know that a high probability really means what it looks like.
-
 ## Conclusion
 
 Jev was 4 to 5 times faster and 6 to 8 times cheaper than gpt-5-mini at its cheapest setting. That is useful, but I expect the gap to change as prices move.
 
 The bigger difference for me is the probabilities. The LLM gives one answer and a confidence that does not match how often it changes its mind. Jev gives the full distribution in one call, cheap enough to use on every step.
+
+What I have not checked is calibration. The probabilities looked honest, but I did not test them against labeled data, and I would before letting them decide anything on their own.
 
 The repo with the demos, the recordings and the figure script is at [github.com/koenae/jev-demo](https://github.com/koenae/jev-demo).
