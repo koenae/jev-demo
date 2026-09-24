@@ -19,7 +19,7 @@ There are three question types:
 2. **Score** places the input on an ordered scale, with a probability per level.
 3. **Noul** is a yes/no question. It returns P(yes).
 
-TypeSafe puts numbers next to it: 70-500 ms latency and "193x faster / 444x cheaper" than an LLM workflow. Those are their numbers on their workloads. I got access, and I wanted my own. So I built [a small repo](https://github.com/koenae/jev-demo) that sends the same decisions to Jev and to gpt-5-mini and records every call.
+TypeSafe puts numbers next to it: 70-500 ms latency and "193x faster / 444x cheaper" than an LLM workflow. Those are their numbers on their workloads. I got access, and I wanted my own. So I sent the same decisions to Jev and to gpt-5-mini and recorded every call. The code and the recordings are in [a small repo](https://github.com/koenae/jev-demo).
 
 ## The setup
 
@@ -104,7 +104,7 @@ I ran the task three times with gpt-5-mini as the judge and three times with Jev
 
 Jev was slower in this session than before. In the two earlier sessions it did 440-507 ms per check, against about 1,500 ms for the LLM, so the factor is 1.6x here and about 3x on the other days.
 
-My first version of this section also showed what share of the run went to judging. A reviewer pointed out that the agent's own turns varied between 7 and 25 seconds per run, so that number said little about the judge. I dropped it.
+The agent's own turns varied between 7 and 25 seconds per run, so I did not compare total run times. What one check costs is the cleaner number.
 
 That first version also showed $0.00 for Jev, because I forgot to count the tokens of the middleware.
 
