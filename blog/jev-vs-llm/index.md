@@ -36,11 +36,11 @@ Finding the gpt-5-mini price took longer than running the benchmark. The Foundry
 
 This is the result that surprised me most, so it goes first.
 
-I took the most ambiguous ticket in my set:
+The task is support ticket triage: which team should handle a ticket, with billing, technical, sales and other as the options. Both systems get the same one-line description per team. I took the most ambiguous ticket in my set of eleven:
 
 > My subscription renewed but the new features from the upgrade aren't showing. Did the payment go through or is this a bug?
 
-This could be billing or technical. I asked gpt-5-mini twenty times, and Jev once.
+This could be billing or technical. I asked gpt-5-mini the team question twenty times, and Jev once. Next to it, as a control, a ticket where there is nothing to doubt: "I was charged EUR 49 twice this month. Please refund one of them."
 
 ![Two bar charts. Left, the ambiguous ticket T-109: gpt-5-mini answered billing in 75% and technical in 25% of 20 samples, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear ticket T-102: both give billing 1.00.](fig-2-one-call-vs-samples.svg)
 
@@ -51,7 +51,7 @@ That 0.84 is not measured by anything. I put a `confidence` field in the output 
 
 So the LLM changes its answer one time in four, and still says it is 84% sure. Jev's 0.54 at least says openly that this ticket is a close call.
 
-On a clear ticket (a double charge, please refund) both are at 100%. So this is not only the LLM failing on a hard case.
+On the double-charge ticket both are at 100%. So this is not only the LLM failing on a hard case.
 
 To get the same picture from the LLM, I have to sample it. For this one ticket, 20 LLM calls took 33.6 s and cost $0.00193. One Jev call took 0.4 s and cost $0.000017.
 
@@ -93,7 +93,7 @@ def decide(p: dict[str, float], t=THRESHOLD) -> Verdict:
     return False, "allowed"
 ```
 
-I ran the task three times with gpt-5-mini as the judge and three times with Jev.
+I ran the task three times with gpt-5-mini as the judge and three times with Jev, which gave 12 LLM-judged and 14 Jev-judged tool calls. Each check includes the last 10 messages of the conversation, so the judge sees what the agent was doing.
 
 ![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](fig-3-agent-gate.svg)
 
