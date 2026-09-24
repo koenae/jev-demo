@@ -45,9 +45,9 @@ The most ambiguous ticket in my set of eleven:
 
 Billing or technical. I asked gpt-5-mini twenty times. I asked Jev once (three times actually, to see if it moved).
 
-![Share of 20 LLM samples per label vs Jev's probabilities from one call, for an ambiguous and a clear ticket](fig-2-one-call-vs-samples.svg)
+![Two bar charts. Left, the ambiguous ticket T-109: gpt-5-mini answered billing in 75% and technical in 25% of 20 samples, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear ticket T-102: both give billing 1.00.](fig-2-one-call-vs-samples.svg)
 
-The LLM said billing 15 times and technical 5 times. In every one of those answers it also reported its own confidence, and the average was 0.84. Jev's single answer was billing 0.54, technical 0.45, with a confidence of 0.38.
+The LLM said billing 15 times and technical 5 times. Each answer also came with a confidence, because I put a `confidence` field in the output schema and asked the model to fill it in. That number is not measured by anything; it is the model writing down a figure about its own answer. The average over the twenty samples was 0.84. Jev's single answer was billing 0.54, technical 0.45, and the confidence field it returns, the 0.38 in the figure, is computed from that distribution rather than reported by the model.
 
 So the LLM disagrees with itself one time in four and calls that 84% confident. Jev's number is the one I would want in my code. On the clear ticket next to it (a double charge, please refund) both sit at 100%, so this is not the LLM being caught only at its weakest.
 
@@ -64,7 +64,7 @@ Two things from the same experiment that I did not expect. Jev is not determinis
 
 Eleven tickets (team, urgency, refund?) and six proposed agent tool calls (destructive? production? secrets?), once through each system.
 
-![Median latency per decision and cost per 1,000 decisions, gpt-5-mini vs Jev](fig-1-head-to-head.svg)
+![Two bar charts comparing gpt-5-mini and Jev on ticket triage and the tool-call gate: median latency per decision (1,595 and 1,374 ms versus 338 and 321 ms) and cost per 1,000 decisions ($0.127 and $0.122 versus $0.021 and $0.020).](fig-1-head-to-head.svg)
 
 | | gpt-5-mini | Jev | |
 |---|---|---|---|
@@ -97,12 +97,11 @@ I ran the same task with gpt-5-mini as the judge (same three questions, structur
 
 The first version of this section compared the total run times, and had a statistic about what share of the run was spent judging. A reviewer pointed out that the agent's own turns varied between 7 and 25 seconds per run, so that share said more about how fast the agent happened to be that time than about the judge. He was right, and I dropped it. What is clean is what one check costs:
 
-![Judge latency per tool call and judge cost per 10,000 tool calls, gpt-5-mini vs Jev](fig-3-agent-gate.svg)
+![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](fig-3-agent-gate.svg)
 
 | Per judged tool call | gpt-5-mini | Jev | |
 |---|---|---|---|
-| Median latency, this session | 1,438 ms | 906 ms | 1.6x |
-| Median latency, earlier sessions | 1,490-1,540 ms | 440-507 ms | ~3x |
+| Median latency | 1,438 ms (1,440-1,540 across sessions) | 906 ms (440-1,000 across sessions) | 1.6x this session, ~3x on the other two |
 | Cost per 10,000 checks | $3.43 | $0.44 | 8x |
 
 The cost ratio is 8x here and 6x above. Each check now carries ten messages of conversation history, which lifts the LLM's input to about 1,140 tokens per check, the same order as Jev's 1,050. Jev's fixed overhead per question stops mattering and the ratio moves toward the raw price ratio of the input tokens.
