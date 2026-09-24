@@ -47,11 +47,11 @@ This could be billing or technical. I asked gpt-5-mini the team question twenty 
 - gpt-5-mini said **billing 15 times** and **technical 5 times**. On average it reported a confidence of **0.84**.
 - Jev said **billing 0.54** and **technical 0.45**, in one call.
 
-That 0.84 is not measured by anything. I put a `confidence` field in the output schema and the model fills it in, so it is the model writing down a number about its own answer. The 0.38 that the figure shows for Jev is different: Jev computes it from the distribution it returned, and it says how concentrated that distribution is. It is not the top probability, which is 0.54 here.
+That 0.84 is not measured by anything. I put a `confidence` field in the output schema and the model fills it in, so it is the model writing down a number about its own answer. Jev's own confidence, 0.38 for this ticket, is different: Jev computes it from the distribution it returned, and it says how concentrated that distribution is. It is not the top probability, which is 0.54 here.
 
 So the LLM changes its answer one time in four, and still says it is 84% sure. Jev's 0.54 at least says openly that this ticket is a close call.
 
-On the double-charge ticket both are at 100%. So this is not only the LLM failing on a hard case.
+The double-charge ticket is the control. There both say billing at 100%, so the LLM is not broken and Jev is not vague by default. T-109 is simply a close call, and Jev shows that in one call where the LLM needed twenty.
 
 To get the same picture from the LLM, I have to sample it. For this one ticket, 20 LLM calls took 33.6 s and cost $0.00193. One Jev call took 0.4 s and cost $0.000017.
 
