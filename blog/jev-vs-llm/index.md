@@ -7,23 +7,11 @@ summary: "I gave TypeSafe's Jev and gpt-5-mini the same decisions and measured s
 draft: true
 ---
 
-## Why I looked at Jev
+## Cool demos, but what does it do
 
-In September 2026 TypeSafe launched Jev and I got early access. Their pitch is that you stop asking an LLM for a small decision and parsing the text that comes back, and get probabilities instead. The example they use is the kind of code that many LLM integrations end up with:
+I first saw Jev in a few demos online. One where an agent browses a lot faster than the usual screenshot-and-think loop. One where an assistant on a Mac fires off actions almost in real time, as if there was no model in between. That is not what LLM demos normally look like, so I wanted to know what was doing the work.
 
-```python
-label = llm(prompt).strip().lower()
-if label == "billing":
-    route_to_billing()
-```
-
-This breaks as soon as the model answers `"Billing."` or `"I'd say billing"`. The usual fix is JSON mode, a schema and retries. And even when the parsing works, there is still no way to know how sure the model was. The line TypeSafe says you can write instead is `if P(billing) > 0.8:`.
-
-That claim, plus the numbers they put next to it, made me curious enough to test it.
-
-## What Jev is
-
-Jev does not generate text. You send it some state and a typed question, and you get probabilities back.
+Jev is a model from TypeSafe, launched in September 2026 and still in early access. It does not generate text. You send it some state and a typed question, and you get probabilities back. That is what makes those demos fast: nothing to parse, nothing to wait for, just a number per option.
 
 There are three question types:
 
@@ -31,9 +19,7 @@ There are three question types:
 2. **Score** places the input on an ordered scale, with a probability per level.
 3. **Noul** is a yes/no question. It returns P(yes).
 
-TypeSafe claims 70-500 ms latency and "193x faster / 444x cheaper" than an LLM workflow. Those are their numbers on their workloads.
-
-I wanted my own numbers, so I built [a small repo](https://github.com/koenae/jev-demo) that sends the same decisions to Jev and to gpt-5-mini and records every call.
+TypeSafe puts numbers next to it: 70-500 ms latency and "193x faster / 444x cheaper" than an LLM workflow. Those are their numbers on their workloads. I got access, and I wanted my own. So I built [a small repo](https://github.com/koenae/jev-demo) that sends the same decisions to Jev and to gpt-5-mini and records every call.
 
 ## The setup
 
