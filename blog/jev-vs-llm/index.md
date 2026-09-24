@@ -112,24 +112,15 @@ On a four-step agent, half a second per check is not visible in the total. But a
 
 One more thing I did not expect. When I cut the history the judge sees from 10 messages to 4, Jev blocked 2 of the 4 calls instead of 3, and the LLM blocked all 4, even `df -h`. So how much context the judge gets is a safety setting, not only a cost setting. I kept it at 10.
 
-## What this does not show
-
-- **Latency varies.** Jev did 320-500 ms per check on two days and 900-1,000 ms on the third, with the same payloads. It runs on the US West Coast and is still in early access.
-- **Calibration is not checked.** The probabilities looked honest, but I did not test them against labeled data.
-- **No explanation.** You only get probabilities. To debug, you change the input and the questions.
-- **Alpha packages.** `langchain-typesafe` was at 0.0.1a3 and the SDK at 0.7.0. Expect things to change.
-
 ## How I would use it
 
-I would start with one decision that now goes prompt, text, parse, and turn it into a Choice or Noul question. I would also log the full distribution, not only the top label.
+I would start small. Take one decision that today goes prompt, text, parse, and turn it into a Choice or Noul question. Log the whole distribution, not just the winning label, so you can look back at what the close calls were.
 
-For the threshold I would follow three rules:
+Then set a threshold above which the decision is automatic, and send everything below it to a person. I would not set that threshold by feel. The repo has a slider that replays the recorded decisions against any value, and that is a much better way to see what a given threshold actually does with your data.
 
-1. Keep a margin. Jev moved up to 0.12 between identical calls, so `> 0.8` really means somewhere between 0.74 and 0.86.
-2. Treat anything around 0.5 as "don't know" and send it to a person. And do not use the confidence value as if it were a probability; it only tells you how spread out the distribution is.
-3. Pick the threshold from recorded data. The repo has a slider that replays decisions against any threshold. At 0.75, 9 of my 11 tickets are handled automatically and 2 go to a person.
+Two things to keep in mind. Jev's probabilities move a bit between identical calls, so leave a margin around the threshold instead of treating it as a sharp line. And the confidence value is not the top probability. It says how spread out the answer is, nothing more.
 
-Before using it in production I would run a few hundred labeled examples through it, to check that 0.8 really means 80%. I have not done that yet.
+I have not checked calibration against labeled data yet. Before using this in production I would, because it is the only way to know that a high probability really means what it looks like.
 
 ## Conclusion
 
