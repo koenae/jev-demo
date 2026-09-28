@@ -93,15 +93,15 @@ I ran the task three times with gpt-5-mini as the judge and three times with Jev
 
 ![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](/fig-3-agent-gate.svg)
 
-Jev was slower in this session than before. In the two earlier sessions it did 440-507 ms per check, against about 1,500 ms for the LLM, so the factor is 1.6x here and about 3x on the other days.
+Jev was slower on this day than on the two days before. Then it took 440 to 507 ms per check, now 906 ms. The LLM stayed around 1,500 ms. So Jev was 1.6 times faster here, and about 3 times faster on the other days.
 
-The agent's own turns varied between 7 and 25 seconds per run, so I did not compare total run times. What one check costs is the cleaner number.
+I did not compare total run times. The agent itself took anywhere between 7 and 25 seconds per run, and that noise would hide the judge. The cost of one check is the number that holds up.
 
-My first version of these numbers showed $0.00 for Jev, because I forgot to count the tokens of the middleware.
+My first run showed $0.00 for Jev. I had forgotten to count the tokens of the middleware.
 
-On a four-step agent, half a second per check is not visible in the total. But at this price I would put a judge on every tool, not only on the dangerous ones.
+In a four-step agent, half a second per check does not show in the total. At this price I would put a judge on every tool, not only on the dangerous ones.
 
-One more thing I did not expect. When I cut the history the judge sees from 10 messages to 4, Jev blocked 2 of the 4 calls instead of 3, and the LLM blocked all 4, even `df -h`. So how much context the judge gets is a safety setting, not only a cost setting. I kept it at 10.
+One more thing I did not expect. I cut the history the judge sees from 10 messages to 4. Jev then blocked 2 of the 4 calls instead of 3. The LLM blocked all 4, even `df -h`. So how much context the judge gets changes what it blocks, not only what it costs. I kept it at 10.
 
 ## Conclusion
 
