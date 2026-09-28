@@ -1,6 +1,6 @@
 ---
 title: "What I measured when I put Jev next to gpt-5-mini"
-date: 2026-09-24
+date: 2026-09-29
 slug: jev-vs-llm-measured
 type: posts
 summary: "I ran the same support tickets and agent tool calls through Jev and gpt-5-mini. On one ambiguous ticket, asked twenty times, gpt-5-mini answered billing fifteen times and technical five. Jev returned both probabilities in one call."
