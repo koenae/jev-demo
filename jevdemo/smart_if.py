@@ -97,7 +97,7 @@ def smart_if(client: TypeSafeClient, ticket: str) -> SmartIfResult:
 
 
 def run_smart_if(mode: Mode = "live", ticket: str = TICKET) -> SmartIfResult:
-    """Entry point used by the CLI and the slides; handles live / record / offline."""
+    """Entry point used by the CLI; handles live / record / offline."""
     if mode == "offline":
         envelope = load_recording(RECORDING)
         return SmartIfResult.from_dict(envelope["data"], origin=origin_of(envelope))

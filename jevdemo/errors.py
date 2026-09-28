@@ -1,4 +1,4 @@
-"""Errors with a human-readable hint, so CLI and slides can show a clean message."""
+"""Errors with a human-readable hint, so the CLI can show a clean message."""
 
 from __future__ import annotations
 

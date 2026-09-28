@@ -153,7 +153,7 @@ def classify_ticket(client: TypeSafeClient, ticket: Ticket) -> TicketDecision:
 
 
 def gate(decisions: list[TicketDecision], threshold: float = DEFAULT_THRESHOLD) -> GateSummary:
-    """The confidence gate itself: pure code, no API call, so a slider can re-run it."""
+    """The confidence gate itself: pure code, no API call, so it can be re-run at any threshold."""
     auto = [d for d in decisions if d.team.confidence >= threshold]
     escalated = [d for d in decisions if d.team.confidence < threshold]
     total_ms = sum(d.meta.latency_ms for d in decisions)
@@ -165,7 +165,7 @@ def classify_tickets(client: TypeSafeClient, tickets: list[Ticket]) -> list[Tick
 
 
 def run_confidence_gate(mode: Mode = "live", tickets: list[Ticket] = TICKETS) -> ConfidenceGateResult:
-    """Entry point for CLI and slides: classify every ticket (or replay), never apply the gate."""
+    """Entry point for the CLI: classify every ticket (or replay), never apply the gate."""
     if mode == "offline":
         envelope = load_recording(RECORDING)
         return ConfidenceGateResult.from_dict(envelope["data"], origin=origin_of(envelope))

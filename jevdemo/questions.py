@@ -1,4 +1,4 @@
-"""Question criteria shared by demo 1 and demo 2 (kept apart so slides can show them)."""
+"""Question criteria shared by demo 1 and demo 2 (kept apart so they can be shown as-is)."""
 
 from typesafe_sdk import NoulCriteria
 

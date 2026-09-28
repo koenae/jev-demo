@@ -69,7 +69,7 @@ class TicketComparison:
     llm_samples: list[LLMSample]
     jev_calls: list[JevCall]
 
-    # --- what the slide shows -------------------------------------------------------------
+    # --- what the demo shows -------------------------------------------------------------
     @property
     def llm_distribution(self) -> dict[str, float]:
         """Fraction of samples per label: the LLM's hidden distribution, reconstructed."""
@@ -183,7 +183,7 @@ def run_one_call_vs_samples(
     ticket_ids: tuple[str, ...] = TICKET_IDS,
     workers: int = WORKERS,
 ) -> OneCallVsSamplesResult:
-    """Entry point for CLI and slides (live / record / offline)."""
+    """Entry point for the CLI (live / record / offline)."""
     if mode == "offline":
         envelope = load_recording(RECORDING)
         return OneCallVsSamplesResult.from_dict(envelope["data"], origin=origin_of(envelope))
