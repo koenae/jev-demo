@@ -21,6 +21,3 @@ uv run python scripts/blog_figures.py
 
 The SVGs are self-contained light cards with fixed colors, so they look the same in light
 and dark mode.
-
-`linkedin.md` and `linkedin-cover.png` are the LinkedIn post and its image
-(`scripts/linkedin_cover.py` renders the image).

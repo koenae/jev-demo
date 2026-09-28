@@ -63,6 +63,5 @@ before `--offline` works.
 - `scripts/selftest.py`: runs every demo against a fake transport, no keys or network
 - `scripts/llm_prices.py`: looks up Azure OpenAI prices through the public Retail Prices API
 - `scripts/blog_figures.py`: draws the three figures in `blog/jev-vs-llm/` from the recordings
-- `scripts/linkedin_cover.py`: draws the LinkedIn image
 
 See `blog/README.md` for how the post and figures go into the Hugo site.
