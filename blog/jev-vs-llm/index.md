@@ -84,7 +84,7 @@ def decide(p: dict[str, float], t=THRESHOLD) -> Verdict:
     return False, "allowed"
 ```
 
-I ran the task three times with gpt-5-mini as the judge and three times with Jev, which gave 12 LLM-judged and 14 Jev-judged tool calls. Each check sends the judge the tool call plus the last 10 messages of the conversation, so it sees what the agent was doing.
+I ran the task three times with gpt-5-mini as the judge and three times with Jev, which gave 12 LLM-judged and 14 Jev-judged tool calls. The two extra calls come from one run where the agent retried after a block. Each check sends the judge the tool call plus the last 10 messages of the conversation, so it sees what the agent was doing.
 
 ![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](/fig-3-agent-gate.svg)
 
@@ -92,7 +92,7 @@ Per check, Jev took 906 ms against 1,438 ms for the LLM, and cost $0.44 per 10,0
 
 The judge is a small part of the run. The agent's own turns took 7 to 25 seconds, so a check of half a second does not show in the total. At this price it can sit in front of every tool.
 
-The context the judge gets matters. With 4 messages of history instead of 10, Jev blocked 2 of the 4 calls instead of 3, and the LLM blocked all 4, even `df -h`.
+The context the judge gets matters. With 4 messages of history instead of 10, Jev blocked 2 of the 4 calls instead of the usual 3, and the LLM blocked all 4, even `df -h`.
 
 ## Conclusion
 
