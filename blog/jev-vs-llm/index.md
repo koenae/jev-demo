@@ -39,7 +39,7 @@ The task is support ticket triage: which team should handle a ticket, with billi
 
 This could be billing or technical. I asked gpt-5-mini the team question twenty times, and Jev once. Next to it, as a control, a ticket where there is nothing to doubt: "I was charged EUR 49 twice this month. Please refund one of them."
 
-![Two bar charts. Left, the ambiguous upgrade ticket: gpt-5-mini answered billing 15 times and technical 5 times out of 20 calls, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear double-charge ticket: both give billing 1.00.](fig-2-one-call-vs-samples.svg)
+![Two bar charts. Left, the ambiguous upgrade ticket: gpt-5-mini answered billing 15 times and technical 5 times out of 20 calls, Jev gave billing 0.54 and technical 0.45 in one call. Right, the clear double-charge ticket: both give billing 1.00.](/fig-2-one-call-vs-samples.svg)
 
 - gpt-5-mini said **billing 15 times** and **technical 5 times**. On average it reported a confidence of **0.84**.
 - Jev said **billing 0.54** and **technical 0.45**, in one call.
@@ -61,7 +61,7 @@ Next I gave both the same two tasks, once per item:
 1. **Ticket triage.** For 11 support tickets: which team, how urgent, and does the customer ask for a refund.
 2. **Tool-call gate.** For 6 commands an agent could want to run, like dropping a database table or reading a log file: is it destructive, does it touch production, can it expose secrets. Each command is checked on its own, without any conversation around it.
 
-![Two bar charts comparing gpt-5-mini and Jev on ticket triage and the tool-call gate: median latency per decision (1,595 and 1,374 ms versus 338 and 321 ms) and cost per 1,000 decisions ($0.127 and $0.122 versus $0.021 and $0.020).](fig-1-head-to-head.svg)
+![Two bar charts comparing gpt-5-mini and Jev on ticket triage and the tool-call gate: median latency per decision (1,595 and 1,374 ms versus 338 and 321 ms) and cost per 1,000 decisions ($0.127 and $0.122 versus $0.021 and $0.020).](/fig-1-head-to-head.svg)
 
 Jev was 4 to 5 times faster and about 6 times cheaper. TypeSafe's own numbers are much higher, but they compare against a heavier LLM setup. Against a cheap LLM with short prompts the gap is smaller.
 
@@ -91,7 +91,7 @@ def decide(p: dict[str, float], t=THRESHOLD) -> Verdict:
 
 I ran the task three times with gpt-5-mini as the judge and three times with Jev, which gave 12 LLM-judged and 14 Jev-judged tool calls. Each check sends the judge the tool call plus the last 10 messages of the conversation, so it sees what the agent was doing.
 
-![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](fig-3-agent-gate.svg)
+![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](/fig-3-agent-gate.svg)
 
 Jev was slower in this session than before. In the two earlier sessions it did 440-507 ms per check, against about 1,500 ms for the LLM, so the factor is 1.6x here and about 3x on the other days.
 
