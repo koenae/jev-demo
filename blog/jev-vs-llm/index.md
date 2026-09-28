@@ -65,7 +65,7 @@ Next I gave both the same two tasks, once per item:
 
 Jev was 4 to 5 times faster and about 6 times cheaper. Not the 444x from TypeSafe's page, but they do not say which LLM or prompt they compare with. Mine is a cheap model with a short prompt.
 
-The answers were mostly the same. Urgency differed on 3 of 11 tickets, each time by one level. And on the `tail` of the error log, Jev gave 0.75 that it could expose secrets where the LLM said no. I can see both.
+The figure shows speed and cost. I also compared the answers themselves. Both gave the same team, refund and gate verdicts on every item. They only differed on urgency for 3 of the 11 tickets, always one level apart, and on the error log, where Jev saw a 0.75 chance of secrets and the LLM saw none. Neither is clearly wrong there.
 
 ## A judge before every tool call
 
