@@ -88,7 +88,7 @@ I ran the task three times with gpt-5-mini as the judge and three times with Jev
 
 ![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](/fig-3-agent-gate.svg)
 
-Per check, Jev took 906 ms against 1,438 ms for the LLM, and cost $0.44 per 10,000 checks against $3.43. On earlier days Jev was faster, 440 to 507 ms, so the speed gap moves with the day. The cost gap does not.
+Per check, Jev took 906 ms against 1,438 ms for the LLM, and cost $0.44 per 10,000 checks against $3.43. On the two days before, Jev did the same check in 440 to 507 ms. So the latency of Jev is not that stable yet, the cost is.
 
 The judge is a small part of the run. The agent's own turns took 7 to 25 seconds, so a check of half a second does not show in the total. At this price it can sit in front of every tool.
 
