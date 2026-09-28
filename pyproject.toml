@@ -1,0 +1,27 @@
+[project]
+name = "jev-demo"
+version = "0.1.0"
+description = "TypeSafe Jev next to gpt-5-mini: same decisions, measured speed, cost and agreement"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "typesafe-sdk==0.7.0",
+    "langchain==1.4.2",
+    "langchain-typesafe[experimental]==0.0.1a3",
+    "langchain-openai==1.6.2",
+    "langchain-anthropic==1.7.2",
+    "rich==15.0.0",
+    "python-dotenv==1.2.3",
+]
+
+[dependency-groups]
+blog = [
+    "matplotlib==3.10.6",
+]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

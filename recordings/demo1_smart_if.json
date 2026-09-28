@@ -1,0 +1,59 @@
+{
+  "demo": "demo1_smart_if",
+  "source": "live",
+  "recorded_at": "2026-09-21T20:41:57+00:00",
+  "versions": {
+    "typesafe-sdk": "0.7.0",
+    "langchain": "1.4.2",
+    "langchain-core": "1.6.3",
+    "langchain-typesafe": "0.0.1a3",
+    "langchain-openai": "1.6.2",
+    "langchain-anthropic": "1.7.2",
+    "langgraph": "1.2.11",
+    "marimo": "0.24.2",
+    "rich": "15.0.0",
+    "python-dotenv": "1.2.3"
+  },
+  "data": {
+    "ticket": "Hi, I upgraded to the Pro plan on Monday but my invoice shows I was charged twice (EUR 49 and again EUR 49). I need one of those charges reversed. On top of that the export to CSV has been failing all week with a 500 error and my quarterly report is due tomorrow morning, so please look at this today.",
+    "answers": {
+      "team": {
+        "type": "choice",
+        "choice": "billing",
+        "confidence": 0.59,
+        "probabilities": {
+          "billing": 0.7,
+          "technical": 0.25,
+          "other": 0.05,
+          "sales": 0.0
+        }
+      },
+      "urgency": {
+        "type": "score",
+        "score": 2.0,
+        "confidence": 1.0,
+        "probabilities": {
+          "0": 0.0,
+          "1": 0.0,
+          "2": 1.0
+        },
+        "legend": {
+          "0": "No time pressure; can wait a week.",
+          "1": "Should be handled within a few days.",
+          "2": "Blocking the customer; needs a same-day response."
+        }
+      },
+      "refund": {
+        "type": "noul",
+        "noul": 0.98
+      }
+    },
+    "meta": {
+      "latency_ms": 1005.9,
+      "model": "jev-1.13.0",
+      "input_tokens": 567,
+      "output_tokens": 76,
+      "request_id": "req_01a0c5b435d1788aa7c24be7770bf0d3"
+    }
+  }
+}
