@@ -46,13 +46,13 @@ def load_recording(name: str) -> dict[str, Any]:
         raise RecordingMissingError(
             f"No recording found at {path.relative_to(RECORDINGS_DIR.parent)}.",
             hint="Run the matching demo once with --record while online "
-            "(see README: 'Offline-modus gebruiken').",
+            "(see README: 'Recording and replaying').",
         )
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def origin_of(envelope: dict[str, Any]) -> str:
-    """Describe where a replayed result came from, for badges in CLI and slides."""
+    """Describe where a replayed result came from, for badges in the CLI."""
     if envelope.get("source") == SOURCE_PLACEHOLDER:
         return "placeholder"
     return "recording"

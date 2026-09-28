@@ -1,7 +1,7 @@
-"""Shared demo logic for the TypeSafe Jev talk.
+"""Shared logic for the Jev vs gpt-5-mini demos.
 
 Every demo lives here as plain, synchronous functions that return data.
-Printing and layout are left to `demos/` (rich CLI) and `presentation/` (marimo).
+Printing is left to the CLIs in `demos/`.
 """
 
 from jevdemo.errors import DemoError, MissingKeyError, RecordingMissingError

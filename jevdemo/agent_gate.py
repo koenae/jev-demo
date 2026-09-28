@@ -3,7 +3,7 @@
 The agent gets simulated ops tools (nothing is executed for real). A custom middleware
 asks Jev three separate Noul questions per tool call: destructive? production? secrets?
 `langchain-typesafe` ships `AutoModeMiddleware`, but that asks a single "is_risky" Noul;
-the talk wants three explicit probabilities, so the middleware below is custom and built
+the demo wants three explicit probabilities, so the middleware below is custom and built
 on `TypeSafeClassifier` from the same package.
 """
 

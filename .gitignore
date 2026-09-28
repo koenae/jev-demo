@@ -5,6 +5,4 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 *.egg-info/
-presentation/__marimo__/
-__marimo__/
 .ipynb_checkpoints/

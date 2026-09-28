@@ -1,4 +1,4 @@
-"""Generate the blog figures (SVG + PNG preview) from the real recordings.
+"""Generate the blog figures (SVG) from the recordings.
 
     uv run python scripts/blog_figures.py            # writes blog/jev-vs-llm/fig-*.svg
 
@@ -80,7 +80,6 @@ def card(fig):
 
 def finish(fig, name: str):
     fig.savefig(OUT / f"{name}.svg", format="svg", bbox_inches="tight", pad_inches=0.1, transparent=True)
-    fig.savefig(OUT / f"{name}.png", format="png", dpi=120, bbox_inches="tight", pad_inches=0.1, transparent=True)
     plt.close(fig)
     print("wrote", (OUT / f"{name}.svg").relative_to(ROOT))
 

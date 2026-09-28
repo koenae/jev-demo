@@ -29,7 +29,6 @@ PACKAGES = (
     "langchain-openai",
     "langchain-anthropic",
     "langgraph",
-    "marimo",
     "rich",
     "python-dotenv",
 )

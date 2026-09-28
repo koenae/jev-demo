@@ -6,7 +6,7 @@
   <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
    <cc:Work>
     <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:date>2026-09-24T21:59:13.759647</dc:date>
+    <dc:date>2026-09-28T20:21:28.016750</dc:date>
     <dc:format>image/svg+xml</dc:format>
     <dc:creator>
      <cc:Agent>
@@ -333,7 +333,7 @@ L 263.980053 79.9056
 L 263.980053 107.8128 
 L 129.6 107.8128 
 z
-" clip-path="url(#p1113040d07)" style="fill: #eb6834"/>
+" clip-path="url(#pfdc1e794d2)" style="fill: #eb6834"/>
    </g>
    <g id="patch_5">
     <path d="M 129.6 112.2192 
@@ -341,7 +341,7 @@ L 158.073707 112.2192
 L 158.073707 140.1264 
 L 129.6 140.1264 
 z
-" clip-path="url(#p1113040d07)" style="fill: #2a78d6"/>
+" clip-path="url(#pfdc1e794d2)" style="fill: #2a78d6"/>
    </g>
    <g id="patch_6">
     <path d="M 129.6 153.3456 
@@ -349,7 +349,7 @@ L 245.340267 153.3456
 L 245.340267 181.2528 
 L 129.6 181.2528 
 z
-" clip-path="url(#p1113040d07)" style="fill: #eb6834"/>
+" clip-path="url(#pfdc1e794d2)" style="fill: #eb6834"/>
    </g>
    <g id="patch_7">
     <path d="M 129.6 185.6592 
@@ -357,7 +357,7 @@ L 156.615893 185.6592
 L 156.615893 213.5664 
 L 129.6 213.5664 
 z
-" clip-path="url(#p1113040d07)" style="fill: #2a78d6"/>
+" clip-path="url(#pfdc1e794d2)" style="fill: #2a78d6"/>
    </g>
    <g id="text_3">
     <!-- Median latency per decision -->
@@ -1072,7 +1072,7 @@ L 607.958338 79.9056
 L 607.958338 107.8128 
 L 470.88 107.8128 
 z
-" clip-path="url(#p52ee651f87)" style="fill: #eb6834"/>
+" clip-path="url(#p3e341de90d)" style="fill: #eb6834"/>
    </g>
    <g id="patch_10">
     <path d="M 470.88 112.2192 
@@ -1080,7 +1080,7 @@ L 494.132544 112.2192
 L 494.132544 140.1264 
 L 470.88 140.1264 
 z
-" clip-path="url(#p52ee651f87)" style="fill: #2a78d6"/>
+" clip-path="url(#p3e341de90d)" style="fill: #2a78d6"/>
    </g>
    <g id="patch_11">
     <path d="M 470.88 153.3456 
@@ -1088,7 +1088,7 @@ L 602.652 153.3456
 L 602.652 181.2528 
 L 470.88 181.2528 
 z
-" clip-path="url(#p52ee651f87)" style="fill: #eb6834"/>
+" clip-path="url(#p3e341de90d)" style="fill: #eb6834"/>
    </g>
    <g id="patch_12">
     <path d="M 470.88 185.6592 
@@ -1096,7 +1096,7 @@ L 492.206208 185.6592
 L 492.206208 213.5664 
 L 470.88 213.5664 
 z
-" clip-path="url(#p52ee651f87)" style="fill: #2a78d6"/>
+" clip-path="url(#p3e341de90d)" style="fill: #2a78d6"/>
    </g>
    <g id="text_10">
     <!-- Cost per 1,000 decisions -->
@@ -1427,10 +1427,10 @@ z
   </g>
  </g>
  <defs>
-  <clipPath id="p1113040d07">
+  <clipPath id="pfdc1e794d2">
    <rect x="129.6" y="65.952" width="227.52" height="161.568"/>
   </clipPath>
-  <clipPath id="p52ee651f87">
+  <clipPath id="p3e341de90d">
    <rect x="470.88" y="65.952" width="227.52" height="161.568"/>
   </clipPath>
  </defs>
