@@ -63,7 +63,7 @@ Next I gave both the same two tasks, once per item:
 
 ![Two bar charts comparing gpt-5-mini and Jev on ticket triage and the tool-call gate: median latency per decision (1,595 and 1,374 ms versus 338 and 321 ms) and cost per 1,000 decisions ($0.127 and $0.122 versus $0.021 and $0.020).](/fig-1-head-to-head.svg)
 
-Jev was 4 to 5 times faster and about 6 times cheaper. TypeSafe's own numbers are much higher, but they compare against a heavier LLM setup. Against a cheap LLM with short prompts the gap is smaller.
+Jev was 4 to 5 times faster and about 6 times cheaper. TypeSafe's own numbers are much higher. I assume they compare against a heavier LLM setup, their page does not say which model or prompt. Against a cheap LLM with short prompts the gap is smaller.
 
 Part of the reason is that Jev counts more input tokens per call: 511 against 282 for triage. I assume the questions and criteria count as input.
 
