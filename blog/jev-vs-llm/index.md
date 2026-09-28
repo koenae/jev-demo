@@ -3,13 +3,13 @@ title: "What I measured when I put Jev next to gpt-5-mini"
 date: 2026-09-24
 slug: jev-vs-llm-measured
 type: posts
-summary: "I gave TypeSafe's Jev and gpt-5-mini the same decisions and measured speed, cost and agreement. Jev was faster and cheaper, but the more interesting result was how often the LLM changed its answer while saying it was sure."
+summary: "I ran the same support tickets and agent tool calls through Jev and gpt-5-mini. On one ambiguous ticket, asked twenty times, gpt-5-mini answered billing fifteen times and technical five. Jev returned both probabilities in one call."
 draft: true
 ---
 
 ## Cool demos, but what does it do
 
-I first saw Jev in a few demos online. One where an agent browses a lot faster than the usual screenshot-and-think loop. One where an assistant on a Mac fires off actions almost in real time, as if there was no model in between. That triggered me into finding out what this Jev think is all about.
+I first saw Jev in a few demos online. One where an agent browses a lot faster than the usual screenshot-and-think loop. One where an assistant on a Mac fires off actions almost in real time, as if there was no model in between. That triggered me into finding out what this Jev thing is all about.
 
 Jev is a model from TypeSafe, launched this month. It does not generate text. You send it some state and a typed question, and you get probabilities back. That is what makes those demos fast: nothing to parse, nothing to wait for, just a number per option.
 
@@ -33,8 +33,6 @@ Finding the gpt-5-mini price took longer than running the benchmark. The Foundry
 
 ## Asking the same question twenty times
 
-This is the result that surprised me most, so it goes first.
-
 The task is support ticket triage: which team should handle a ticket, with billing, technical, sales and other as the options. Both systems get the same one-line description per team. I took the most ambiguous ticket in my set of eleven:
 
 > My subscription renewed but the new features from the upgrade aren't showing. Did the payment go through or is this a bug?
@@ -46,40 +44,39 @@ This could be billing or technical. I asked gpt-5-mini the team question twenty 
 - gpt-5-mini said **billing 15 times** and **technical 5 times**. On average it reported a confidence of **0.84**.
 - Jev said **billing 0.54** and **technical 0.45**, in one call.
 
-That 0.84 is not measured by anything. I put a `confidence` field in the output schema and the model fills it in, so it is the model writing down a number about its own answer. Jev's own confidence, 0.38 for this ticket, is different: Jev computes it from the distribution it returned, and it says how concentrated that distribution is. It is not the top probability, which is 0.54 here.
+That 0.84 is not measured by anything. I put a confidence field in the output schema and the model fills it in, so it is the model writing down a number about its own answer. Jev's own confidence, 0.38 for this ticket, is different: Jev computes it from the distribution it returned, and it says how concentrated that distribution is. It is not the top probability, which is 0.54 here.
 
 So the LLM changes its answer one time in four, and still says it is 84% sure. Jev's 0.54 at least says openly that this ticket is a close call.
 
 The double-charge ticket is the control. There both say billing at 100%, so the LLM is not broken and Jev is not vague by default. The upgrade ticket is simply a close call, and Jev shows that in one call where the LLM needed twenty.
 
-To get the same picture from the LLM, I had to sample it. For the upgrade ticket alone, the 20 LLM calls took 33.6 s and cost $0.00193. One Jev call on the same ticket took 0.4 s and cost $0.000017.
+Getting that split from the LLM is slow and expensive. It gives one answer per call, so I needed 20 calls. Together they took 33.6 s and cost $0.00193. One Jev call took 0.4 s and cost $0.000017.
 
-Jev is not fully stable either. Three identical calls moved its probabilities by up to 0.12, so a threshold on these numbers needs some margin.
+Jev was not fully stable during my testing. Three identical calls moved its probabilities by up to 0.12, so a threshold on these numbers needs some margin.
 
 ## Same decisions, side by side
 
-Next I ran 11 support tickets and 6 agent tool calls through both, once each.
+Next I gave both the same two tasks, once per item:
+
+1. **Ticket triage.** For 11 support tickets: which team, how urgent, and does the customer ask for a refund.
+2. **Tool-call gate.** For 6 commands an agent could want to run, like dropping a database table or reading a log file: is it destructive, does it touch production, can it expose secrets. Each command is checked on its own, without any conversation around it.
 
 ![Two bar charts comparing gpt-5-mini and Jev on ticket triage and the tool-call gate: median latency per decision (1,595 and 1,374 ms versus 338 and 321 ms) and cost per 1,000 decisions ($0.127 and $0.122 versus $0.021 and $0.020).](fig-1-head-to-head.svg)
 
-| | gpt-5-mini | Jev |
-|---|---|---|
-| Median latency, ticket triage | 1,595 ms | 338 ms |
-| Median latency, tool-call gate | 1,374 ms | 321 ms |
-| Cost per 1,000 decisions | $0.12-0.13 | $0.02 |
+Jev was 4 to 5 times faster and about 6 times cheaper. TypeSafe's own numbers are much higher, but they compare against a heavier LLM setup. Against a cheap LLM with short prompts the gap is smaller.
 
-Jev was 4 to 5 times faster and 6 times cheaper. Not 444 times. Against a cheap LLM with short prompts the gap is real, but modest.
+Part of the reason is that Jev counts more input tokens per call: 511 against 282 for triage. I assume the questions and criteria count as input.
 
-Part of the reason is that Jev counts more input tokens per call (511 against 282 for triage). I assume the questions and criteria count as input.
-
-Mostly the two agreed. Where they didn't, I would have hesitated too:
+Most answers were the same. Team, refund, destructive and production matched on every item. Where they differed, I would have hesitated too:
 
 - Urgency differed on 3 of 11 tickets, each time by one level.
 - For `tail -n 200 /var/log/app/error.log`, Jev gave 0.75 that it might expose secrets. The LLM said no. Error logs do leak secrets sometimes, so I would not pick a side.
 
 ## A judge before every tool call
 
-For the agent case I used a LangChain agent with simulated ops tools. Its task includes "drop the table `orders_archive_2023` on production" and "read `/etc/app/secrets.env`".
+The tool-call gate above checked loose commands. Here the same three questions run inside an agent that is actually doing a task, and the judge also gets the conversation around each call.
+
+I used a LangChain agent with simulated ops tools. Its task includes "drop the table `orders_archive_2023` on production" and "read `/etc/app/secrets.env`".
 
 Before each tool call, a middleware asks three yes/no questions: is it destructive, is it production, can it expose secrets. Whoever answers those questions is what I call the judge here. In one set of runs that is gpt-5-mini, in the other it is Jev. The policy that turns the three answers into allow or block is plain code:
 
@@ -96,16 +93,11 @@ I ran the task three times with gpt-5-mini as the judge and three times with Jev
 
 ![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](fig-3-agent-gate.svg)
 
-| Per tool call | gpt-5-mini | Jev |
-|---|---|---|
-| Median latency | 1,438 ms (1,440-1,540 across sessions) | 906 ms (440-1,000 across sessions) |
-| Cost per 10,000 checks | $3.43 | $0.44 |
-
 Jev was slower in this session than before. In the two earlier sessions it did 440-507 ms per check, against about 1,500 ms for the LLM, so the factor is 1.6x here and about 3x on the other days.
 
 The agent's own turns varied between 7 and 25 seconds per run, so I did not compare total run times. What one check costs is the cleaner number.
 
-That first version also showed $0.00 for Jev, because I forgot to count the tokens of the middleware.
+My first version of these numbers showed $0.00 for Jev, because I forgot to count the tokens of the middleware.
 
 On a four-step agent, half a second per check is not visible in the total. But at this price I would put a judge on every tool, not only on the dangerous ones.
 
