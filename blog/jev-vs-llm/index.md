@@ -93,15 +93,11 @@ I ran the task three times with gpt-5-mini as the judge and three times with Jev
 
 ![Two bar charts for the agent judge: median latency per tool call, 1,438 ms for gpt-5-mini versus 906 ms for Jev, and cost per 10,000 tool calls, $3.43 versus $0.44.](/fig-3-agent-gate.svg)
 
-Jev was slower on this day than on the two days before. Then it took 440 to 507 ms per check, now 906 ms. The LLM stayed around 1,500 ms. So Jev was 1.6 times faster here, and about 3 times faster on the other days.
+Per check, Jev took 906 ms against 1,438 ms for the LLM, and cost $0.44 per 10,000 checks against $3.43. On earlier days Jev was faster, 440 to 507 ms, so the speed gap moves with the day. The cost gap does not.
 
-I did not compare total run times. The agent itself took anywhere between 7 and 25 seconds per run, and that noise would hide the judge. The cost of one check is the number that holds up.
+The judge is a small part of the run. The agent's own turns took 7 to 25 seconds, so a check of half a second does not show in the total. At this price it can sit in front of every tool.
 
-My first run showed $0.00 for Jev. I had forgotten to count the tokens of the middleware.
-
-In a four-step agent, half a second per check does not show in the total. At this price I would put a judge on every tool, not only on the dangerous ones.
-
-One more thing I did not expect. I cut the history the judge sees from 10 messages to 4. Jev then blocked 2 of the 4 calls instead of 3. The LLM blocked all 4, even `df -h`. So how much context the judge gets changes what it blocks, not only what it costs. I kept it at 10.
+The context the judge gets matters. With 4 messages of history instead of 10, Jev blocked 2 of the 4 calls instead of 3, and the LLM blocked all 4, even `df -h`.
 
 ## Conclusion
 
