@@ -63,14 +63,9 @@ Next I gave both the same two tasks, once per item:
 
 ![Two bar charts comparing gpt-5-mini and Jev on ticket triage and the tool-call gate: median latency per decision (1,595 and 1,374 ms versus 338 and 321 ms) and cost per 1,000 decisions ($0.127 and $0.122 versus $0.021 and $0.020).](/fig-1-head-to-head.svg)
 
-Jev was 4 to 5 times faster and about 6 times cheaper. That is far from the 444x on TypeSafe's page, but they do not say which LLM or prompt they compare with. Against a cheap model with a short prompt, the gap is smaller.
+Jev was 4 to 5 times faster and about 6 times cheaper. Not the 444x from TypeSafe's page, but they compare against a heavier setup than a cheap model with a short prompt.
 
-One reason is that Jev counts more input tokens than the LLM for the same call: 511 against 282 for a ticket. I think the questions and criteria are counted as input.
-
-The answers were mostly the same. Only two things differed:
-
-- Urgency, on 3 of 11 tickets, each time one level apart.
-- The `tail` on the error log. Jev said 0.75 that it could expose secrets, the LLM said no. Error logs do leak secrets sometimes, so I can see both.
+The answers were mostly the same. Urgency differed on 3 of 11 tickets, each time by one level. And on the `tail` of the error log, Jev gave 0.75 that it could expose secrets where the LLM said no. I can see both.
 
 ## A judge before every tool call
 
