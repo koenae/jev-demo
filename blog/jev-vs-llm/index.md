@@ -100,4 +100,4 @@ Jev was 4 to 5 times faster and 6 to 8 times cheaper than gpt-5-mini at its chea
 
 The bigger difference for me is the probabilities. The LLM gives one answer and a confidence that does not match how often it changes its mind. Jev gives the full distribution in one call, cheap enough to use on every step.
 
-The repo with the demos, the recordings and the figure script is at [github.com/koenae/jev-demo](https://github.com/koenae/jev-demo).
+Code and recordings: [github.com/koenae/jev-demo](https://github.com/koenae/jev-demo).
